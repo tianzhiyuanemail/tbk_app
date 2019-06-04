@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new RestartWidget(
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(backgroundColor: Colors.white),
         home: Scaffold(
           resizeToAvoidBottomPadding: false,
