@@ -12,7 +12,6 @@ class SplashWidget extends StatefulWidget {
 }
 
 class _SplashWidgetState extends State<SplashWidget> {
-//  var container = ContainerPage();
 
   bool showAd = true;
 
@@ -22,7 +21,7 @@ class _SplashWidgetState extends State<SplashWidget> {
       children: <Widget>[
         Offstage( /// 主程序
           offstage: showAd,
-          child: new Text("33333333333333333333333"),
+          child: new ContainerPage(),
         ),
         Offstage( /// 欢迎页面
           offstage: !showAd,
