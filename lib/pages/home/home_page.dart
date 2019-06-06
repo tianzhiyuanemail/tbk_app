@@ -50,7 +50,8 @@ class _BookAudioVideoPageState extends State<HomePage>
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
-                  new SliverToBoxAdapter(
+                  new SliverToBoxAdapter( /// 搜索框
+
                     child: new Container(
                       color: Colors.white,
                       padding: const EdgeInsets.all(10.0),
@@ -62,7 +63,7 @@ class _BookAudioVideoPageState extends State<HomePage>
                       ),
                     ),
                   ),
-                  new SliverPersistentHeader(
+                  new SliverPersistentHeader( /// 头部导航栏
                     floating: true,
                     pinned: true,
                     delegate: new _SliverAppBarDelegate(
