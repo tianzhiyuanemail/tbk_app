@@ -3,6 +3,7 @@
  */
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tbk_app/widgets/search_text_field_widget.dart';
 import 'dart:math' as math;
 
@@ -41,6 +42,8 @@ class _BookAudioVideoPageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance  = ScreenUtil(width: 750,height: 1334)..init(context);
+
     return new Container(
       color: Colors.white,
       child: new SafeArea(

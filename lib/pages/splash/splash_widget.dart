@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/constant/constant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../container_page.dart';
@@ -17,7 +19,6 @@ class _SplashWidgetState extends State<SplashWidget> {
   @override
   Widget build(BuildContext context) {
 
-    ScreenUtil.instance  = ScreenUtil(width: 750,height: 1334)..init(context);
 
     return Stack(
       children: <Widget>[
@@ -30,8 +31,8 @@ class _SplashWidgetState extends State<SplashWidget> {
           child: new InkWell( /// 设置背景图片点击事件
             onTap: ()=>print("222222222222222222"),
             child: Container( ///  内容
-              width: ScreenUtil.screenWidth,
-              height: ScreenUtil.screenHeight,
+//              width: ScreenUtil.screenWidth,
+//              height: ScreenUtil.screenHeight,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(Constant.ASSETS_IMG + 'shouye.jpg'),

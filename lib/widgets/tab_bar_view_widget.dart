@@ -8,9 +8,7 @@ class FlutterTabBarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('build FlutterTabBarView');
     var viewList = [
-//      MoviePage(key: PageStorageKey<String>('MoviePage'),),
       HomePageFirst(),
       Page2(),
       Page2(),
@@ -18,7 +16,6 @@ class FlutterTabBarView extends StatelessWidget {
       Page2(),
       Page2(),
       Page2(),
-//      DouBanListView(key: PageStorageKey<String>('DouBanListView'),),
       Page4(),
       Page5(),
       Page1(),

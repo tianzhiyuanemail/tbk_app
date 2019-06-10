@@ -13,17 +13,16 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/config/service_method.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class HomePageFirst extends StatefulWidget {
   @override
   _HomePageFirstState createState() => _HomePageFirstState();
 }
 
 class _HomePageFirstState extends State<HomePageFirst> {
-
   int page = 1;
-  List  hotGoodsList = [];
-  GlobalKey<RefreshFooterState> _easyRefreshKey = new GlobalKey<RefreshFooterState>();
+  List hotGoodsList = [];
+  GlobalKey<RefreshFooterState> _easyRefreshKey =
+      new GlobalKey<RefreshFooterState>();
   List swiper = [];
   List navigatorList = List(10);
   List recommendList = List(6);
@@ -36,86 +35,74 @@ class _HomePageFirstState extends State<HomePageFirst> {
       'http://kaze-sora.com/sozai/blog_haru/blog_mitubachi01.jpg';
   String leaderPhone = '17610502953';
 
-
   @override
   void initState() {
     print("111111111111111");
     _getHotGoods();
-    getHomePageContent().then((val){
+    getHomePageContent().then((val) {
       swiper = val['data'] as List;
     });
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return EasyRefresh(
-        refreshFooter: ClassicsFooter(
-            key:_easyRefreshKey,
-            bgColor:Colors.white,
-            textColor: Colors.pink,
-            moreInfoColor: Colors.pink,
-            showMore: true,
-            noMoreText: '',
-            moreInfo: '加载中',
-            loadReadyText:'上拉加载....'
+      refreshFooter: ClassicsFooter(
+          key: _easyRefreshKey,
+          bgColor: Colors.white,
+          textColor: Colors.pink,
+          moreInfoColor: Colors.pink,
+          showMore: true,
+          noMoreText: '',
+          moreInfo: '加载中',
+          loadReadyText: '上拉加载....'),
+      loadMore: () async {
+        print("加载更多");
+        getHomePageGoods(page).then((val) {
+          List swiper = val['data'];
+          print(swiper);
+          setState(() {
+            hotGoodsList.addAll(swiper);
+            page++;
+          });
+        });
+      },
+      onRefresh: () async {
+        print("刷新");
+        getHomePageGoods(page).then((val) {
+          List swiper = val['data'];
+          print(swiper);
+          setState(() {
+            hotGoodsList = swiper;
+            page = 1;
+          });
+        });
+      },
 
-        ),
-        loadMore: () async {
-          print("加载更多");
-          getHomePageGoods(page).then((val){
-            List swiper = val['data'];
-            print(swiper);
-            setState(() {
-              hotGoodsList.addAll(swiper);
-              page ++;
-            });
-          });
-        },
-        onRefresh: () async {
-          print("刷新");
-          getHomePageGoods(page).then((val){
-            List swiper = val['data'];
-            print(swiper);
-            setState(() {
-              hotGoodsList = swiper;
-              page =1;
-            });
-          });
-        },
-        child:  Container(
-          height: ScreenUtil.screenHeight,
-          child: ListView(
-            children: <Widget>[
-              SwiperDiy(swiperDataList: swiper),
-              TopNavigator(navigatorList: navigatorList),
-              AdBanner(adPicture: adPicture),
-              LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
-              Recommend(recommendList: recommendList,),
-              FlootTitle(picture_address:picture_address),
-              FlootContent(flootGoodsList: flootGoodsList),
-              FlootTitle(picture_address:picture_address),
-              FlootContent(flootGoodsList: flootGoodsList),
-              FlootTitle(picture_address:picture_address),
-              FlootContent(flootGoodsList: flootGoodsList),
-              HotGoods(),
-              _hotGoods ()
-            ],
-          ),
-        )
+    child: ListView(
+      children: <Widget>[
+        SwiperDiy(swiperDataList: swiper),
+        TopNavigator(navigatorList: navigatorList),
+        AdBanner(adPicture: adPicture),
+        LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
+        Recommend(recommendList: recommendList),
+        FlootTitle(picture_address: picture_address),
+        FlootContent(flootGoodsList: flootGoodsList),
+//              HotGoods(),
+        _hotGoods()
+      ],
+    ),
     );
   }
 
-  void _getHotGoods(){
-    getHomePageGoods(page).then((val){
-
+  void _getHotGoods() {
+    getHomePageGoods(page).then((val) {
       List swiper = val['data'];
       print(swiper);
       setState(() {
         hotGoodsList.addAll(swiper);
-        page ++;
+        page++;
       });
     });
   }
@@ -128,12 +115,11 @@ class _HomePageFirstState extends State<HomePageFirst> {
     child: Text("火爆专区"),
   );
 
-  Widget _wrapList(){
-    if(hotGoodsList.length !=0){
-      List<Widget> listWidget = hotGoodsList.map((v){
-
+  Widget _wrapList() {
+    if (hotGoodsList.length != 0) {
+      List<Widget> listWidget = hotGoodsList.map((v) {
         return InkWell(
-          onTap: (){},
+          onTap: () {},
           child: Container(
             width: ScreenUtil().setWidth(370),
             color: Colors.white,
@@ -141,12 +127,21 @@ class _HomePageFirstState extends State<HomePageFirst> {
             margin: EdgeInsets.only(bottom: 3),
             child: Column(
               children: <Widget>[
-                Image.network(v['pictUrl'],width: ScreenUtil().setWidth(370)),
-                Text(v['title'],style: TextStyle(color: Colors.pink,fontSize: ScreenUtil().setSp(26)),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                Image.network(v['pictUrl'], width: ScreenUtil().setWidth(370)),
+                Text(
+                  v['title'],
+                  style: TextStyle(
+                      color: Colors.pink, fontSize: ScreenUtil().setSp(26)),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 Row(
                   children: <Widget>[
                     Text("￥255"),
-                    Text("￥255",style: TextStyle( color: Colors.black12),),
+                    Text(
+                      "￥255",
+                      style: TextStyle(color: Colors.black12),
+                    ),
                   ],
                 )
               ],
@@ -158,20 +153,16 @@ class _HomePageFirstState extends State<HomePageFirst> {
         spacing: 2,
         children: listWidget,
       );
-    }else{
+    } else {
       return Text("正在加载");
     }
   }
 
-  Widget _hotGoods (){
+  Widget _hotGoods() {
     return Container(
-        child:  Column(
-          children: <Widget>[
-            hotTitle,
-            _wrapList()
-          ],
-        )
-    );
+        child: Column(
+      children: <Widget>[hotTitle, _wrapList()],
+    ));
   }
 }
 
@@ -225,7 +216,6 @@ class TopNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       height: ScreenUtil().setHeight(320),
       padding: EdgeInsets.all(3.0),
       child: GridView.count(
@@ -299,7 +289,7 @@ class Recommend extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.white,
           border:
-          Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
+              Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
       child: Text(
         "商品推荐",
         style: TextStyle(color: Colors.pink),
@@ -322,11 +312,13 @@ class Recommend extends StatelessWidget {
           children: <Widget>[
 //            Image.network(recommendList[index]['image']),
 //            Text('${recommendList[index]['mallPrice']}'),
-            Image.network('http://e.hiphotos.baidu.com/image/pic/item/359b033b5bb5c9eac1754f45df39b6003bf3b396.jpg'),
+            Image.network(
+                'http://e.hiphotos.baidu.com/image/pic/item/359b033b5bb5c9eac1754f45df39b6003bf3b396.jpg'),
             Text('￥222'),
             Text(
               '￥222',
-              style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey),
+              style: TextStyle(
+                  decoration: TextDecoration.lineThrough, color: Colors.grey),
             ),
           ],
         ),
@@ -334,19 +326,17 @@ class Recommend extends StatelessWidget {
     );
   }
 
-  Widget _recommendList (){
-
-    return Container (
+  Widget _recommendList() {
+    return Container(
         height: ScreenUtil().setHeight(333),
         margin: EdgeInsets.only(top: 10),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: recommendList.length,
-          itemBuilder: (context,index){
+          itemBuilder: (context, index) {
             return _item(index);
           },
-        )
-    );
+        ));
   }
 
   @override
@@ -355,20 +345,16 @@ class Recommend extends StatelessWidget {
 //      height: ScreenUtil().setHeight(380),
       margin: EdgeInsets.only(top: 10),
       child: Column(
-        children: <Widget>[
-          _titleWidget(),
-          _recommendList()
-        ],
+        children: <Widget>[_titleWidget(), _recommendList()],
       ),
     );
   }
 }
 
 class FlootTitle extends StatelessWidget {
-
   final String picture_address;
 
-  FlootTitle({Key key,this.picture_address}):super(key:key);
+  FlootTitle({Key key, this.picture_address}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -380,10 +366,9 @@ class FlootTitle extends StatelessWidget {
 }
 
 class FlootContent extends StatelessWidget {
-
   final List flootGoodsList;
 
-  FlootContent({Key key,this.flootGoodsList}):super(key :key);
+  FlootContent({Key key, this.flootGoodsList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -397,7 +382,7 @@ class FlootContent extends StatelessWidget {
     );
   }
 
-  Widget _firstRow (){
+  Widget _firstRow() {
     return Row(
       children: <Widget>[
         _goodsItem(flootGoodsList[0]),
@@ -410,7 +395,8 @@ class FlootContent extends StatelessWidget {
       ],
     );
   }
-  Widget _otherGoods(){
+
+  Widget _otherGoods() {
     return Row(
       children: <Widget>[
         _goodsItem(flootGoodsList[3]),
@@ -419,17 +405,17 @@ class FlootContent extends StatelessWidget {
     );
   }
 
-  Widget _goodsItem(Map m){
+  Widget _goodsItem(Map m) {
     return Container(
       width: ScreenUtil().setWidth(375),
       padding: EdgeInsets.all(10),
       child: InkWell(
-        onTap: (){},
-        child: Image.network("http://e.hiphotos.baidu.com/image/pic/item/359b033b5bb5c9eac1754f45df39b6003bf3b396.jpg"),
+        onTap: () {},
+        child: Image.network(
+            "http://e.hiphotos.baidu.com/image/pic/item/359b033b5bb5c9eac1754f45df39b6003bf3b396.jpg"),
       ),
     );
   }
-
 }
 
 class HotGoods extends StatefulWidget {
@@ -438,10 +424,8 @@ class HotGoods extends StatefulWidget {
 }
 
 class _HotGoodsState extends State<HotGoods> {
-
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -452,6 +436,3 @@ class _HotGoodsState extends State<HotGoods> {
     );
   }
 }
-
-
-
