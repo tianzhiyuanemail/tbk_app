@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tbk_app/constant/constant.dart';
-import 'package:tbk_app/util/screen_utils.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../container_page.dart';
 
 ///打开APP首页
@@ -17,6 +16,9 @@ class _SplashWidgetState extends State<SplashWidget> {
 
   @override
   Widget build(BuildContext context) {
+
+    ScreenUtil.instance  = ScreenUtil(width: 750,height: 1334)..init(context);
+
     return Stack(
       children: <Widget>[
         Offstage( /// 主程序
@@ -25,11 +27,11 @@ class _SplashWidgetState extends State<SplashWidget> {
         ),
         Offstage( /// 欢迎页面
           offstage: !showAd,
-          child: new GestureDetector( /// 设置背景图片点击事件
+          child: new InkWell( /// 设置背景图片点击事件
             onTap: ()=>print("222222222222222222"),
             child: Container( ///  内容
-              width: ScreenUtils.screenW(context),
-              height: ScreenUtils.screenH(context),
+              width: ScreenUtil.screenWidth,
+              height: ScreenUtil.screenHeight,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(Constant.ASSETS_IMG + 'shouye.jpg'),
@@ -104,13 +106,17 @@ class _SplashWidgetState extends State<SplashWidget> {
       ],
     );
   }
+  
+  
+  
 }
+
+
 
 class CountDownWidget extends StatefulWidget {
   final onCountDownFinishCallBack;
 
-  CountDownWidget({Key key, @required this.onCountDownFinishCallBack})
-      : super(key: key);
+  CountDownWidget({Key key, @required this.onCountDownFinishCallBack}) : super(key: key);
 
   @override
   _CountDownWidgetState createState() => _CountDownWidgetState();

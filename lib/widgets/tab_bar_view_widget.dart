@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tbk_app/pages/home/home_page_view.dart';
+import 'package:tbk_app/pages/home/home_page_first.dart';
 
 class FlutterTabBarView extends StatelessWidget {
   final TabController tabController;
@@ -11,7 +11,7 @@ class FlutterTabBarView extends StatelessWidget {
     print('build FlutterTabBarView');
     var viewList = [
 //      MoviePage(key: PageStorageKey<String>('MoviePage'),),
-      HomePageOne(),
+      HomePageFirst(),
       Page2(),
       Page2(),
       Page2(),

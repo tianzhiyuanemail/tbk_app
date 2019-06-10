@@ -21,14 +21,10 @@ class _ContainerPageState extends State<ContainerPage> {
   final defaultItemColor = Color.fromARGB(255, 125, 125, 125);
 
   final itemNames = [
-    _Item('首页', 'assets/images/ic_tab_home_active.png',
-        'assets/images/ic_tab_home_normal.png'),
-    _Item('分类', 'assets/images/ic_tab_subject_active.png',
-        'assets/images/ic_tab_subject_normal.png'),
-    _Item('市集', 'assets/images/ic_tab_shiji_active.png',
-        'assets/images/ic_tab_shiji_normal.png'),
-    _Item('我的', 'assets/images/ic_tab_profile_active.png',
-        'assets/images/ic_tab_profile_normal.png')
+    _Item('首页', 'assets/images/ic_tab_home_active.png', 'assets/images/ic_tab_home_normal.png'),
+    _Item('分类', 'assets/images/ic_tab_subject_active.png', 'assets/images/ic_tab_subject_normal.png'),
+    _Item('市集', 'assets/images/ic_tab_shiji_active.png', 'assets/images/ic_tab_shiji_normal.png'),
+    _Item('我的', 'assets/images/ic_tab_profile_active.png', 'assets/images/ic_tab_profile_normal.png')
   ];
 
   List<BottomNavigationBarItem> itemList;
@@ -37,30 +33,14 @@ class _ContainerPageState extends State<ContainerPage> {
   @override
   void initState() {
     super.initState();
-    print('initState _ContainerPageState');
     pages..add(new HomePage())..add(Text("1"))..add(Text("1"))..add(Text("1"));
 
-//      pages = [
-////        HomePage(),
-////        BookAudioVideoPage(),
-////        GroupPage(),
-////        shopPageWidget,
-////        PersonCenterPage()
-//      ];
     if (itemList == null) {
       itemList = itemNames
           .map((item) => BottomNavigationBarItem(
-              icon: Image.asset(
-                item.normalIcon,
-                width: 30.0,
-                height: 30.0,
-              ),
-              title: Text(
-                item.name,
-                style: TextStyle(fontSize: 10.0),
-              ),
-              activeIcon:
-                  Image.asset(item.activeIcon, width: 30.0, height: 30.0)))
+              icon: Image.asset(item.normalIcon, width: 30.0, height: 30.0),
+              title: Text(item.name, style: TextStyle(fontSize: 10.0)),
+              activeIcon: Image.asset(item.activeIcon, width: 30.0, height: 30.0)))
           .toList();
     }
   }
@@ -73,11 +53,7 @@ class _ContainerPageState extends State<ContainerPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('build _ContainerPageState');
     return Scaffold(
-      body: new Container(
-        child: this.pages[_selectIndex],
-      ),
       backgroundColor: Color.fromARGB(255, 248, 248, 248),
       bottomNavigationBar: BottomNavigationBar(
         items: this.itemList,
@@ -86,8 +62,7 @@ class _ContainerPageState extends State<ContainerPage> {
           setState(() {
             _selectIndex = index;
             //这个是用来控制比较特别的shopPage中WebView不能动态隐藏的问题
-//            shopPageWidget
-//                .setShowState(pages.indexOf(shopPageWidget) == _selectIndex);
+            //shopPageWidget.setShowState(pages.indexOf(shopPageWidget) == _selectIndex);
           });
         },
 
@@ -100,6 +75,11 @@ class _ContainerPageState extends State<ContainerPage> {
         fixedColor: Color.fromARGB(255, 0, 188, 96),
         type: BottomNavigationBarType.fixed,
       ),
+      body: IndexedStack(
+        index: _selectIndex,
+        children: pages,
+      ),
+      //  pages[_selectIndex],
     );
   }
 }
