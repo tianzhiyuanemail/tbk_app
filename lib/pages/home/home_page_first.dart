@@ -18,7 +18,7 @@ class HomePageFirst extends StatefulWidget {
   _HomePageFirstState createState() => _HomePageFirstState();
 }
 
-class _HomePageFirstState extends State<HomePageFirst> {
+class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveClientMixin{
   int page = 1;
   List hotGoodsList = [];
   GlobalKey<RefreshFooterState> _easyRefreshKey =
@@ -34,6 +34,8 @@ class _HomePageFirstState extends State<HomePageFirst> {
   String picture_address =
       'http://kaze-sora.com/sozai/blog_haru/blog_mitubachi01.jpg';
   String leaderPhone = '17610502953';
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {

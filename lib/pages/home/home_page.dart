@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 
 /// 首页 state
 class _BookAudioVideoPageState extends State<HomePage>
-    with SingleTickerProviderStateMixin , AutomaticKeepAliveClientMixin{
+    with SingleTickerProviderStateMixin {
 
 
   List<Widget>  tabList;
@@ -30,8 +30,6 @@ class _BookAudioVideoPageState extends State<HomePage>
   var hintText = "替换这里的文字";
 
 
-  @override
-  bool get wantKeepAlive => false;
 
   @override
   void initState() {
@@ -79,9 +77,7 @@ class _BookAudioVideoPageState extends State<HomePage>
                   )
                 ];
               },
-              body: FlutterTabBarView(
-                tabController: tabController,
-              )),
+              body: FlutterTabBarView(tabController: tabController)),
         ),
       ),
     );
