@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tbk_app/pages/home/hom_page_other.dart';
+import 'package:tbk_app/pages/home/home_page_first.dart';
 
 class FlutterTabBarView extends StatelessWidget {
   final TabController tabController;
@@ -7,22 +9,20 @@ class FlutterTabBarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('build FlutterTabBarView');
     var viewList = [
-//      MoviePage(key: PageStorageKey<String>('MoviePage'),),
+      HomePageFirst(),
+      HomePageOther(),
       Page2(),
       Page2(),
       Page2(),
       Page2(),
       Page2(),
-      Page2(),
-      Page2(),
-//      DouBanListView(key: PageStorageKey<String>('DouBanListView'),),
       Page4(),
       Page5(),
       Page1(),
     ];
     return TabBarView(
+
       children: viewList,
       controller: tabController,
     );
