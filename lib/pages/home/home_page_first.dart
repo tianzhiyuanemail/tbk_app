@@ -6,11 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/config/service_method.dart';
+import 'package:tbk_app/widgets/product_list_view_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePageFirst extends StatefulWidget {
@@ -39,7 +41,6 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
 
   @override
   void initState() {
-    print("111111111111111");
     _getHotGoods();
     getHomePageContent().then((val) {
       swiper = val['data'] as List;
@@ -49,53 +50,66 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
-    return EasyRefresh(
-      refreshFooter: ClassicsFooter(
-          key: _easyRefreshKey,
-          bgColor: Colors.white,
-          textColor: Colors.pink,
-          moreInfoColor: Colors.pink,
-          showMore: true,
-          noMoreText: '',
-          moreInfo: '加载中',
-          loadReadyText: '上拉加载....'),
-      loadMore: () async {
-        print("加载更多");
-        getHomePageGoods(page).then((val) {
-          List swiper = val['data'];
-          print(swiper);
-          setState(() {
-            hotGoodsList.addAll(swiper);
-            page++;
-          });
-        });
-      },
-      onRefresh: () async {
-        print("刷新");
-        getHomePageGoods(page).then((val) {
-          List swiper = val['data'];
-          print(swiper);
-          setState(() {
-            hotGoodsList = swiper;
-            page = 1;
-          });
-        });
-      },
-
-    child: ListView(
-      children: <Widget>[
-        SwiperDiy(swiperDataList: swiper),
-        TopNavigator(navigatorList: navigatorList),
-        AdBanner(adPicture: adPicture),
-        LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
-        Recommend(recommendList: recommendList),
-        FlootTitle(picture_address: picture_address),
-        FlootContent(flootGoodsList: flootGoodsList),
-//              HotGoods(),
-        _hotGoods()
-      ],
-    ),
-    );
+//    return EasyRefresh(
+//      refreshFooter: ClassicsFooter(
+//          key: _easyRefreshKey,
+//          bgColor: Colors.white,
+//          textColor: Colors.pink,
+//          moreInfoColor: Colors.pink,
+//          showMore: true,
+//          noMoreText: '',
+//          moreInfo: '加载中',
+//          loadReadyText: '上拉加载....'),
+//      loadMore: () async {
+//        print("加载更多");
+//        getHomePageGoods(page).then((val) {
+//          List swiper = val['data'];
+//          print(swiper);
+//          setState(() {
+//            hotGoodsList.addAll(swiper);
+//            page++;
+//          });
+//        });
+//      },
+//      onRefresh: () async {
+//        print("刷新");
+//        getHomePageGoods(page).then((val) {
+//          List swiper = val['data'];
+//          print(swiper);
+//          setState(() {
+//            hotGoodsList = swiper;
+//            page = 1;
+//          });
+//        });
+//      },
+//
+//    child: ListView(
+//      children: <Widget>[
+//        SwiperDiy(swiperDataList: swiper),
+//        TopNavigator(navigatorList: navigatorList),
+//        AdBanner(adPicture: adPicture),
+//        LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
+//        Recommend(recommendList: recommendList),
+//        FlootTitle(picture_address: picture_address),
+//        FlootContent(flootGoodsList: flootGoodsList),
+//        hotTitle,
+//        ProductList(list: hotGoodsList)
+//      ],
+//    ),
+//    );
+  return ListView(
+    children: <Widget>[
+      SwiperDiy(swiperDataList: swiper),
+      TopNavigator(navigatorList: navigatorList),
+      AdBanner(adPicture: adPicture),
+      LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
+      Recommend(recommendList: recommendList),
+      FlootTitle(picture_address: picture_address),
+      FlootContent(flootGoodsList: flootGoodsList),
+      hotTitle,
+      ProductList(list: hotGoodsList)
+    ],
+  );
   }
 
   void _getHotGoods() {
@@ -117,55 +131,6 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
     child: Text("火爆专区"),
   );
 
-  Widget _wrapList() {
-    if (hotGoodsList.length != 0) {
-      List<Widget> listWidget = hotGoodsList.map((v) {
-        return InkWell(
-          onTap: () {},
-          child: Container(
-            width: ScreenUtil().setWidth(370),
-            color: Colors.white,
-            padding: EdgeInsets.all(5),
-            margin: EdgeInsets.only(bottom: 3),
-            child: Column(
-              children: <Widget>[
-                Image.network(v['pictUrl'], width: ScreenUtil().setWidth(370)),
-                Text(
-                  v['title'],
-                  style: TextStyle(
-                      color: Colors.pink, fontSize: ScreenUtil().setSp(26)),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text("￥255"),
-                    Text(
-                      "￥255",
-                      style: TextStyle(color: Colors.black12),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      }).toList();
-      return Wrap(
-        spacing: 2,
-        children: listWidget,
-      );
-    } else {
-      return Text("正在加载");
-    }
-  }
-
-  Widget _hotGoods() {
-    return Container(
-        child: Column(
-      children: <Widget>[hotTitle, _wrapList()],
-    ));
-  }
 }
 
 // 首页轮播组件编写
@@ -221,6 +186,7 @@ class TopNavigator extends StatelessWidget {
       height: ScreenUtil().setHeight(320),
       padding: EdgeInsets.all(3.0),
       child: GridView.count(
+        shrinkWrap:true,
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 5,
         padding: EdgeInsets.all(4.0),
@@ -269,8 +235,8 @@ class LeaderPhone extends StatelessWidget {
   }
 
   void _launchUrl() async {
-//    String url = 'https://www.baidu.com/';
-    String url = 'tel:' + leaderPhone;
+    String url = 'https://www.baidu.com/';
+//    String url = 'tel:' + leaderPhone;
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -416,25 +382,6 @@ class FlootContent extends StatelessWidget {
         child: Image.network(
             "http://e.hiphotos.baidu.com/image/pic/item/359b033b5bb5c9eac1754f45df39b6003bf3b396.jpg"),
       ),
-    );
-  }
-}
-
-class HotGoods extends StatefulWidget {
-  @override
-  _HotGoodsState createState() => _HotGoodsState();
-}
-
-class _HotGoodsState extends State<HotGoods> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text("22222222"),
     );
   }
 }

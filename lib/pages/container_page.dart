@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tbk_app/pages/my/my_page.dart';
 
+import 'cate/cate_page.dart';
 import 'home/home_page.dart';
 
 ///这个页面是作为整个APP的最外层的容器，以Tab为基础控制每个item的显示与隐藏
@@ -34,7 +36,8 @@ class _ContainerPageState extends State<ContainerPage> {
   @override
   void initState() {
     super.initState();
-    pages..add(new HomePage())..add(Text("1"))..add(Text("1"))..add(Text("1"));
+    pages..add(new HomePage())..add(CatePage())..add(Text("1"))..add
+      (MyInfoPage());
 
     if (itemList == null) {
       itemList = itemNames

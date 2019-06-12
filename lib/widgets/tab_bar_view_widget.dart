@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tbk_app/pages/home/hom_page_other.dart';
 import 'package:tbk_app/pages/home/home_page_first.dart';
 
 class FlutterTabBarView extends StatelessWidget {
@@ -10,7 +11,7 @@ class FlutterTabBarView extends StatelessWidget {
   Widget build(BuildContext context) {
     var viewList = [
       HomePageFirst(),
-      Page2(),
+      HomePageOther(),
       Page2(),
       Page2(),
       Page2(),
@@ -21,6 +22,7 @@ class FlutterTabBarView extends StatelessWidget {
       Page1(),
     ];
     return TabBarView(
+
       children: viewList,
       controller: tabController,
     );
