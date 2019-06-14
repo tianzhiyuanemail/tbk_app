@@ -50,66 +50,54 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
-//    return EasyRefresh(
-//      refreshFooter: ClassicsFooter(
-//          key: _easyRefreshKey,
-//          bgColor: Colors.white,
-//          textColor: Colors.pink,
-//          moreInfoColor: Colors.pink,
-//          showMore: true,
-//          noMoreText: '',
-//          moreInfo: '加载中',
-//          loadReadyText: '上拉加载....'),
-//      loadMore: () async {
-//        print("加载更多");
-//        getHomePageGoods(page).then((val) {
-//          List swiper = val['data'];
-//          print(swiper);
-//          setState(() {
-//            hotGoodsList.addAll(swiper);
-//            page++;
-//          });
-//        });
-//      },
-//      onRefresh: () async {
-//        print("刷新");
-//        getHomePageGoods(page).then((val) {
-//          List swiper = val['data'];
-//          print(swiper);
-//          setState(() {
-//            hotGoodsList = swiper;
-//            page = 1;
-//          });
-//        });
-//      },
-//
-//    child: ListView(
-//      children: <Widget>[
-//        SwiperDiy(swiperDataList: swiper),
-//        TopNavigator(navigatorList: navigatorList),
-//        AdBanner(adPicture: adPicture),
-//        LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
-//        Recommend(recommendList: recommendList),
-//        FlootTitle(picture_address: picture_address),
-//        FlootContent(flootGoodsList: flootGoodsList),
-//        hotTitle,
-//        ProductList(list: hotGoodsList)
-//      ],
-//    ),
-//    );
-  return ListView(
-    children: <Widget>[
-      SwiperDiy(swiperDataList: swiper),
-      TopNavigator(navigatorList: navigatorList),
-      AdBanner(adPicture: adPicture),
-      LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
-      Recommend(recommendList: recommendList),
-      FlootTitle(picture_address: picture_address),
-      FlootContent(flootGoodsList: flootGoodsList),
-      hotTitle,
-      ProductList(list: hotGoodsList)
-    ],
-  );
+    return EasyRefresh(
+      refreshFooter: ClassicsFooter(
+          key: _easyRefreshKey,
+          bgColor: Colors.white,
+          textColor: Colors.pink,
+          moreInfoColor: Colors.pink,
+          showMore: true,
+          noMoreText: '',
+          moreInfo: '加载中',
+          loadReadyText: '上拉加载....'),
+      loadMore: () async {
+        print("加载更多");
+        getHomePageGoods(page).then((val) {
+          List swiper = val['data'];
+          print(swiper);
+          setState(() {
+            hotGoodsList.addAll(swiper);
+            page++;
+          });
+        });
+      },
+      onRefresh: () async {
+        print("刷新");
+        getHomePageGoods(page).then((val) {
+          List swiper = val['data'];
+          print(swiper);
+          setState(() {
+            hotGoodsList = swiper;
+            page = 1;
+          });
+        });
+      },
+
+    child: ListView(
+      children: <Widget>[
+        SwiperDiy(swiperDataList: swiper),
+        TopNavigator(navigatorList: navigatorList),
+        AdBanner(adPicture: adPicture),
+        LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
+        Recommend(recommendList: recommendList),
+        FlootTitle(picture_address: picture_address),
+        FlootContent(flootGoodsList: flootGoodsList),
+        hotTitle,
+        ProductList(list: hotGoodsList)
+      ],
+    ),
+    );
+
   }
 
   void _getHotGoods() {

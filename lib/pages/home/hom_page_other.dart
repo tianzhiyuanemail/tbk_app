@@ -47,51 +47,44 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
-//    return  EasyRefresh(
-//          refreshFooter: ClassicsFooter(
-//              key: _easyRefreshKey,
-//              bgColor: Colors.white,
-//              textColor: Colors.pink,
-//              moreInfoColor: Colors.pink,
-//              showMore: true,
-//              noMoreText: '',
-//              moreInfo: '加载中',
-//              loadReadyText: '上拉加载....',
-//          ),
-//          loadMore: () async {
-//            print("加载更多");
-//            _getCateGoods();
-//          },
-//          onRefresh: () async {
-//            print("刷新");
-//            getHomePageGoods(1).then((val) {
-//              List swiper = val['data'];
-//              print(swiper);
-//              setState(() {
-//                goodsList = swiper;
-//                page = 1;
-//              });
-//            });
-//          },
-//        child: CustomScrollView(
-//          slivers: <Widget>[
-//            CateHotProduct(productImage: productImage,productId: productId,),
-//            SecondaryCategory(secondaryCategoryList: secondaryCategoryList,),
-//            _buildStickyBar(),
-//            SliverProductList(list: goodsList),
-//          ],
-//        ),
-//
-//      );
+    return  EasyRefresh(
+          refreshFooter: ClassicsFooter(
+              key: _easyRefreshKey,
+              bgColor: Colors.white,
+              textColor: Colors.pink,
+              moreInfoColor: Colors.pink,
+              showMore: true,
+              noMoreText: '',
+              moreInfo: '加载中',
+              loadReadyText: '上拉加载....',
+          ),
+          loadMore: () async {
+            print("加载更多");
+            _getCateGoods();
+          },
+          onRefresh: () async {
+            print("刷新");
+            getHomePageGoods(1).then((val) {
+              List swiper = val['data'];
+              print(swiper);
+              setState(() {
+                goodsList = swiper;
+                page = 1;
+              });
+            });
+          },
+        child: CustomScrollView(
+          slivers: <Widget>[
+            CateHotProduct(productImage: productImage,productId: productId,),
+            SecondaryCategory(secondaryCategoryList: secondaryCategoryList,),
+            _buildStickyBar(),
+            SliverProductList(list: goodsList),
+          ],
+        ),
 
-  return  CustomScrollView(
-    slivers: <Widget>[
-      CateHotProduct(productImage: productImage,productId: productId,),
-      SecondaryCategory(secondaryCategoryList: secondaryCategoryList,),
-      _buildStickyBar(),
-      SliverProductList(list: goodsList),
-    ],
-  );
+      );
+
+
   }
 
   Widget _buildStickyBar() {
@@ -99,12 +92,11 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
       pinned: true, //是否固定在顶部
       floating: true,
       delegate: _SliverAppBarDelegate(
-          maxHeight: 100.0,
-          minHeight: 100.0,
+          maxHeight: 50.0,
+          minHeight: 50.0,
           child: Container(
-//            margin: EdgeInsets.only(top: 40),
             padding: EdgeInsets.only(left: 16),
-            color: Colors.pink,
+            color: Colors.blue,
             alignment: Alignment.centerLeft,
             child: Text("浮动", style: TextStyle(fontSize: 18)),
           ),
