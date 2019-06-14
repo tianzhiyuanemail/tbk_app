@@ -5,7 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:tbk_app/pages/splash/splash_widget.dart';
 
 void main() {
+
+  // 强制竖屏
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+
   runApp(MyApp());
+
   if(Platform.isAndroid){
     /// 设置Android头部的导航栏透明
     SystemUiOverlayStyle style = new SystemUiOverlayStyle(statusBarColor: Colors.transparent);

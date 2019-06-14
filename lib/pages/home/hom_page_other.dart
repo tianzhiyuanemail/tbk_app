@@ -99,8 +99,8 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
       pinned: true, //是否固定在顶部
       floating: true,
       delegate: _SliverAppBarDelegate(
-          maxHeight: 30.0,
-          minHeight: 30.0,
+          maxHeight: 100.0,
+          minHeight: 100.0,
           child: Container(
 //            margin: EdgeInsets.only(top: 40),
             padding: EdgeInsets.only(left: 16),
