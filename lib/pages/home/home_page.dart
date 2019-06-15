@@ -42,44 +42,79 @@ class _BookAudioVideoPageState extends State<HomePage>
   Widget build(BuildContext context) {
     ScreenUtil.instance  = ScreenUtil(width: 750,height: 1334)..init(context);
 
-    return new Container(
-      color: Colors.white,
-      child: new SafeArea(
-        child: new DefaultTabController(
-          length: tabList.length,
-          child: new NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  new SliverToBoxAdapter( /// 搜索框
-                    child: new Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.all(10.0),
-                      child: SearchTextFieldWidget(
-                        hintText: hintText,
-                        onTab: () {
-                          Router.push(context, Router.searchPage, hintText);
-                        },
-                      ),
-                    ),
-                  ),
-                  new SliverPersistentHeader( /// 头部导航栏
-                    floating: true,
-                    pinned: true,
-                    delegate: new _SliverAppBarDelegate(
-                      maxHeight: 49.0,
-                      minHeight: 49.0,
-                      child: new Container(
-                        color: Colors.white,
-                        child: HomePageTabBar(tabList:tabList,tabController: tabController,),
-                      ),
-                    ),
-                  )
-                ];
+    return  DefaultTabController(
+        length: tabList.length,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.pink, //导航栏和状态栏的的颜色
+            elevation: 0, //阴影的高度
+            brightness: Brightness.light, //控制状态栏的颜色，lignt 文字是灰色的，dark是白色的
+            //        iconTheme: IconThemeData(
+            //            color: Colors.yellow,
+            //            opacity: 0.5,
+            //            size: 30), //icon的主题样式,默认的颜色是黑色的，不透明为1，size是24
+            //        textTheme: TextTheme(), //这个主题的参数比较多,flutter定义了13种不同的字体样式
+            centerTitle: true, //标题是否居中，默认为false
+            //        toolbarOpacity: 0.5, //整个导航栏的不透明度
+            bottomOpacity: 0.8, //bottom的不透明度
+            titleSpacing: 0, //标题两边的空白区域,
+
+            // 左侧返回按钮，可以有按钮，可以有文字
+            leading: Builder(
+              builder: (BuildContext context) {
+                return Align(
+                  widthFactor: 10,
+                  alignment: Alignment.center,
+                  child: Text('咸鱼',style: TextStyle(color: Colors.white),),
+                );
               },
-              body: FlutterTabBarView(tabController: tabController)),
-        ),
-      ),
+            ),
+            title: Container(
+              width: 400,
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              decoration: BoxDecoration(
+                  color:  Colors.white70,
+                  border: Border(
+                    bottom: BorderSide(width: 0.5, color: Colors.black12),
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(10))
+              ),
+              child: SearchTextFieldWidget(hintText: "搜索什么",),
+            ),
+            actions: <Widget>[
+              IconButton(
+                color: Colors.black54,
+                icon: Icon(Icons.border_horizontal),
+                // tooltip: 'Restitch it',
+                onPressed: (){},
+              ),
+            ],
+            bottom: PreferredSize(
+              child: Container(
+                //color: Colors.white,
+                height: 30,
+                child: TabBar(
+                  tabs: tabList,
+                  isScrollable: true,
+                  controller: tabController,
+                  indicatorColor: Colors.yellowAccent,
+                  labelColor: Colors.yellowAccent,
+                  labelStyle: TextStyle(fontSize: 18, color: Colors.white),
+                  unselectedLabelColor: Colors.white,
+                  unselectedLabelStyle: TextStyle(fontSize: 18, color: Colors.white),
+                  indicatorSize: TabBarIndicatorSize.label,
+                ),
+              ),
+              preferredSize: Size(10, 10),
+            ),
+          ),
+          body: new Container(
+            color: Colors.white,
+            child: new SafeArea(
+              child: FlutterTabBarView(tabController: tabController),
+            ),
+          ),
+        )
     );
   }
 
@@ -96,66 +131,3 @@ class _BookAudioVideoPageState extends State<HomePage>
   }
 }
 
-
-
-/// 头部导航栏
-class HomePageTabBar extends StatelessWidget {
-
-  final  List<Widget> tabList;
-  final  TabController tabController;
-
-
-
-  HomePageTabBar({Key key,this.tabList,this.tabController}):super(key:key);
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: TabBar(
-        tabs: tabList,
-        isScrollable: true,
-        controller: tabController,
-        indicatorColor: Colors.pinkAccent,
-        labelColor: Colors.pinkAccent,
-        labelStyle: TextStyle(fontSize: 18, color: Colors.black),
-        unselectedLabelColor: Color.fromARGB(255, 117, 117, 117),
-        unselectedLabelStyle: TextStyle(fontSize: 18, color: Colors.black),
-        indicatorSize: TabBarIndicatorSize.label,
-      ),
-    );
-  }
-}
-
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate({
-    @required this.minHeight,
-    @required this.maxHeight,
-    @required this.child,
-  });
-
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  @override
-  double get minExtent => minHeight;
-
-  @override
-  double get maxExtent => math.max((minHeight ?? kToolbarHeight), minExtent);
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return child;
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
-  }
-}

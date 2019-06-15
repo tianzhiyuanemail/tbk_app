@@ -15,7 +15,7 @@ class SearchTextFieldWidget extends StatelessWidget {
       margin: margin == null ? EdgeInsets.all(0.0) : margin,
       width: MediaQuery.of(context).size.width,
       alignment: AlignmentDirectional.center,
-      height: 37.0,
+      height: 30.0,
       decoration: BoxDecoration(
           color: Color.fromARGB(255, 237, 236, 237),
           borderRadius: BorderRadius.circular(24.0)),
