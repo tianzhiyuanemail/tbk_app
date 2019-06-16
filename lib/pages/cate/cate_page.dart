@@ -181,7 +181,7 @@ class _CatePageState extends State<CatePage>
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 4),
-                  child: Text("分类",
+                  child: Text(cate['tbkName'].toString().length>2?cate['tbkName'].toString().substring(0,2):cate['tbkName'].toString(),
                     style: TextStyle(fontSize: ScreenUtil().setSp(20)),
                   ),
                 )

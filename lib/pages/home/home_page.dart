@@ -4,6 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tbk_app/config/service_method.dart';
+import 'package:tbk_app/config/service_url.dart';
 import 'package:tbk_app/widgets/search_text_field_widget.dart';
 import 'dart:math' as math;
 
@@ -23,17 +25,16 @@ class HomePage extends StatefulWidget {
 class _BookAudioVideoPageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
 
-  List<Widget> tabList;
+  List<Widget> tabList = new List(10);
   TabController tabController;
   var hintText = "替换这里的文字";
 
   @override
   void initState() {
     super.initState();
-    tabList = this.getTabList();
+    this.getTabList();
     tabController = TabController(vsync: this, length: tabList.length);
-
-
+    
   }
 
   @override
@@ -84,7 +85,9 @@ class _BookAudioVideoPageState extends State<HomePage>
                 color: Colors.black54,
                 icon: Icon(Icons.border_horizontal),
                 // tooltip: 'Restitch it',
-                onPressed: () {},
+                onPressed: () {
+
+                },
               ),
             ],
             bottom: PreferredSize(
@@ -107,6 +110,7 @@ class _BookAudioVideoPageState extends State<HomePage>
               preferredSize: Size(10, 10),
             ),
           ),
+
           body: new Container(
             color: Colors.white,
             child: new SafeArea(
@@ -116,25 +120,18 @@ class _BookAudioVideoPageState extends State<HomePage>
         ));
   }
 
-  List<Widget> getTabList() {
-    var titleList = [
-      '电影',
-      '电视',
-      '综艺',
-      '读书',
-      '音乐',
-      '22',
-      '33',
-      '44',
-      '55',
-      '66'
-    ];
-
-    return titleList
-        .map((item) => Text(
-              '$item',
+ void getTabList() {
+    getHttpRes('cateListByPid', 'parentId=0').then((val) {
+      setState(() {
+        List titleList = val['data'] as List;
+        tabList = titleList.sublist(0,10)
+            .map((cate) => Text(
+             'tbkName',
+//              cate['tbkName'],
               style: TextStyle(fontSize: 15),
-            ))
-        .toList();
+        )) .toList();
+      });
+    });
+
   }
 }
