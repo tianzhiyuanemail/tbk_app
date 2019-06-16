@@ -2,17 +2,24 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provide/provide.dart';
 import 'package:tbk_app/pages/splash/splash_widget.dart';
+import 'package:tbk_app/provide/child_cate.dart';
 
 void main() {
+  var childCate  = ChildCate();
 
+  var providers = Providers();
+  providers
+    ..provide(Provider<ChildCate>.value(childCate))
+  ;
   // 强制竖屏
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]);
 
-  runApp(MyApp());
+  runApp(ProviderNode(child: MyApp(),providers: providers,));
 
   if(Platform.isAndroid){
     /// 设置Android头部的导航栏透明

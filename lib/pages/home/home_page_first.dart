@@ -61,10 +61,8 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
           moreInfo: '加载中',
           loadReadyText: '上拉加载....'),
       loadMore: () async {
-        print("加载更多");
         getHomePageGoods(page).then((val) {
           List swiper = val['data'];
-          print(swiper);
           setState(() {
             hotGoodsList.addAll(swiper);
             page++;
@@ -72,10 +70,8 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
         });
       },
       onRefresh: () async {
-        print("刷新");
         getHomePageGoods(page).then((val) {
           List swiper = val['data'];
-          print(swiper);
           setState(() {
             hotGoodsList = swiper;
             page = 1;
@@ -103,7 +99,6 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
   void _getHotGoods() {
     getHomePageGoods(page).then((val) {
       List swiper = val['data'];
-      print(swiper);
       setState(() {
         hotGoodsList.addAll(swiper);
         page++;

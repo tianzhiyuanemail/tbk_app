@@ -69,18 +69,7 @@ class _BookAudioVideoPageState extends State<HomePage>
                 );
               },
             ),
-            title: Container(
-              width: 400,
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              decoration: BoxDecoration(
-                  color:  Colors.white70,
-                  border: Border(
-                    bottom: BorderSide(width: 0.5, color: Colors.black12),
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(10))
-              ),
-              child: SearchTextFieldWidget(hintText: "搜索什么",),
-            ),
+            title: SearchTextFieldWidget(hintText: "搜索什么",),
             actions: <Widget>[
               IconButton(
                 color: Colors.black54,

@@ -59,14 +59,11 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
               loadReadyText: '上拉加载....',
           ),
           loadMore: () async {
-            print("加载更多");
             _getCateGoods();
           },
           onRefresh: () async {
-            print("刷新");
             getHomePageGoods(1).then((val) {
               List swiper = val['data'];
-              print(swiper);
               setState(() {
                 goodsList = swiper;
                 page = 1;
@@ -107,7 +104,6 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
   void _getCateGoods() {
     getHomePageGoods(page).then((val) {
       List swiper = val['data'];
-      print(swiper);
       setState(() {
         goodsList.addAll(swiper);
         page++;
