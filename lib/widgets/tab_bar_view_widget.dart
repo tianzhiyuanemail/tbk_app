@@ -22,7 +22,6 @@ class FlutterTabBarView extends StatelessWidget {
       Page1(),
     ];
     return TabBarView(
-
       children: viewList,
       controller: tabController,
     );

@@ -12,6 +12,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/config/service_method.dart';
+import 'package:tbk_app/widgets/go_home_widget.dart';
 import 'package:tbk_app/widgets/product_list_view_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,7 +21,11 @@ class HomePageFirst extends StatefulWidget {
   _HomePageFirstState createState() => _HomePageFirstState();
 }
 
-class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveClientMixin{
+class _HomePageFirstState extends State<HomePageFirst>
+    with AutomaticKeepAliveClientMixin {
+  ScrollController _controller = new ScrollController();
+  bool showToTopBtn = false; //是否显示“返回到顶部”按钮
+
   int page = 1;
   List hotGoodsList = [];
   GlobalKey<RefreshFooterState> _easyRefreshKey =
@@ -36,8 +41,13 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
   String picture_address =
       'http://kaze-sora.com/sozai/blog_haru/blog_mitubachi01.jpg';
   String leaderPhone = '17610502953';
+
   @override
   bool get wantKeepAlive => true;
+
+  int add(int a, int b) {
+    return a + b;
+  }
 
   @override
   void initState() {
@@ -45,55 +55,80 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
     getHomePageContent().then((val) {
       swiper = val['data'] as List;
     });
+
+    //监听滚动事件，打印滚动位置
+    _controller.addListener(() {
+      if (_controller.offset < 100 && showToTopBtn) {
+        setState(() {
+          setState(() {
+            showToTopBtn = false;
+          });
+        });
+      } else if (_controller.offset >= 1000 && showToTopBtn == false) {
+        setState(() {
+          showToTopBtn = true;
+        });
+      }
+    });
     super.initState();
   }
 
   @override
+  void dispose() {
+    //为了避免内存泄露，需要调用_controller.dispose
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return EasyRefresh(
-      refreshFooter: ClassicsFooter(
-          key: _easyRefreshKey,
-          bgColor: Colors.white,
-          textColor: Colors.pink,
-          moreInfoColor: Colors.pink,
-          showMore: true,
-          noMoreText: '',
-          moreInfo: '加载中',
-          loadReadyText: '上拉加载....'),
-      loadMore: () async {
-        getHomePageGoods(page).then((val) {
-          List swiper = val['data'];
-          setState(() {
-            hotGoodsList.addAll(swiper);
-            page++;
+    return Scaffold(
+      floatingActionButton:
+          GoHomeButton(controller: _controller, showToTopBtn: showToTopBtn),
+      body: EasyRefresh(
+        refreshFooter: ClassicsFooter(
+            key: _easyRefreshKey,
+            bgColor: Colors.white,
+            textColor: Colors.pink,
+            moreInfoColor: Colors.pink,
+            showMore: true,
+            noMoreText: '',
+            moreInfo: '加载中',
+            loadReadyText: '上拉加载....'),
+        loadMore: () async {
+          getHomePageGoods(page).then((val) {
+            List swiper = val['data'];
+            setState(() {
+              hotGoodsList.addAll(swiper);
+              page++;
+            });
           });
-        });
-      },
-      onRefresh: () async {
-        getHomePageGoods(page).then((val) {
-          List swiper = val['data'];
-          setState(() {
-            hotGoodsList = swiper;
-            page = 1;
+        },
+        onRefresh: () async {
+          getHomePageGoods(page).then((val) {
+            List swiper = val['data'];
+            setState(() {
+              hotGoodsList = swiper;
+              page = 1;
+            });
           });
-        });
-      },
-
-    child: ListView(
-      children: <Widget>[
-        SwiperDiy(swiperDataList: swiper),
-        TopNavigator(navigatorList: navigatorList),
-        AdBanner(adPicture: adPicture),
-        LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
-        Recommend(recommendList: recommendList),
-        FlootTitle(picture_address: picture_address),
-        FlootContent(flootGoodsList: flootGoodsList),
-        hotTitle,
-        ProductList(list: hotGoodsList)
-      ],
-    ),
+        },
+        child: ListView(
+          controller: _controller,
+          children: <Widget>[
+            SwiperDiy(swiperDataList: swiper),
+            TopNavigator(navigatorList: navigatorList),
+            AdBanner(adPicture: adPicture),
+            LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
+            Recommend(recommendList: recommendList),
+            FlootTitle(picture_address: picture_address),
+            FlootContent(flootGoodsList: flootGoodsList),
+            hotTitle,
+            ProductList(list: hotGoodsList)
+          ],
+        ),
+      ),
     );
-
   }
 
   void _getHotGoods() {
@@ -113,7 +148,6 @@ class _HomePageFirstState extends State<HomePageFirst> with AutomaticKeepAliveCl
     color: Colors.transparent,
     child: Text("火爆专区"),
   );
-
 }
 
 // 首页轮播组件编写
@@ -169,7 +203,7 @@ class TopNavigator extends StatelessWidget {
       height: ScreenUtil().setHeight(320),
       padding: EdgeInsets.all(3.0),
       child: GridView.count(
-        shrinkWrap:true,
+        shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 5,
         padding: EdgeInsets.all(4.0),
