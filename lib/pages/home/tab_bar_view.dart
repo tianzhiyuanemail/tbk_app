@@ -4,23 +4,25 @@ import 'package:tbk_app/pages/home/home_page_first.dart';
 
 class FlutterTabBarView extends StatelessWidget {
   final TabController tabController;
+  final List titleList;
 
-  FlutterTabBarView({Key key, @required this.tabController}) : super(key: key);
+  FlutterTabBarView({Key key, @required this.tabController,@required this.titleList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var viewList = [
-      HomePageFirst(),
-      HomePageOther(),
-      Page2(),
-      Page2(),
-      Page2(),
-      Page2(),
-      Page2(),
-      Page4(),
-      Page5(),
-      Page1(),
-    ];
+    var viewList = [];
+
+    viewList =  titleList.asMap().keys.map((key){
+      if (key == 0){
+        return HomePageFirst();
+      }else if(key == 1){
+        return Page2();
+      }else{
+        return HomePageOther();
+      }
+    }).toList();
+
+
     return TabBarView(
       children: viewList,
       controller: tabController,

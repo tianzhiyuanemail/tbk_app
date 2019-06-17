@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class GoHomeButton extends StatelessWidget {
+class BackTopButton extends StatelessWidget {
 
   ScrollController controller ;
   bool showToTopBtn ; //是否显示“返回到顶部”按钮
 
-  GoHomeButton({Key key,this.controller,this.showToTopBtn}):super(key:key);
+  BackTopButton({Key key,this.controller,this.showToTopBtn}):super(key:key);
 
   @override
   Widget build(BuildContext context) {

@@ -9,26 +9,31 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tbk_app/config/service_method.dart';
+import 'package:tbk_app/widgets/back_top_widget.dart';
 import 'dart:math' as math;
 
 import 'package:tbk_app/widgets/product_list_view_widget.dart';
-
 
 class HomePageOther extends StatefulWidget {
   @override
   _HomePageOtherState createState() => _HomePageOtherState();
 }
 
-class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveClientMixin {
-  String productId="1234";
-  String productImage="http://kaze-sora.com/sozai/blog_haru/blog_mitubachi01.jpg";
+class _HomePageOtherState extends State<HomePageOther>
+    with AutomaticKeepAliveClientMixin {
+  ScrollController _controller = new ScrollController();
+  bool showToTopBtn = false; //是否显示“返回到顶部”按钮
+
+  String productId = "1234";
+  String productImage =
+      "http://kaze-sora.com/sozai/blog_haru/blog_mitubachi01.jpg";
 
   List secondaryCategoryList = List(10);
   List goodsList = [];
 
   int page = 0;
   GlobalKey<RefreshFooterState> _easyRefreshKey =
-  new GlobalKey<RefreshFooterState>();
+      new GlobalKey<RefreshFooterState>();
 
   @override
   bool get wantKeepAlive => true;
@@ -36,27 +41,47 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
   @override
   void initState() {
     _getCateGoods();
+    //监听滚动事件，打印滚动位置
+    _controller.addListener(() {
+
+      if (_controller.offset < 1000 && showToTopBtn) {
+        setState(() {
+          setState(() {
+            showToTopBtn = false;
+          });
+        });
+      } else if (_controller.offset >= 1000 && showToTopBtn == false) {
+        setState(() {
+          showToTopBtn = true;
+        });
+      }
+    });
 
     super.initState();
   }
 
   @override
   void dispose() {
+    //为了避免内存泄露，需要调用_controller.dispose
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return  EasyRefresh(
+    return Scaffold(
+        floatingActionButton:
+            BackTopButton(controller: _controller, showToTopBtn: showToTopBtn),
+        body: EasyRefresh(
           refreshFooter: ClassicsFooter(
-              key: _easyRefreshKey,
-              bgColor: Colors.white,
-              textColor: Colors.pink,
-              moreInfoColor: Colors.pink,
-              showMore: true,
-              noMoreText: '',
-              moreInfo: '加载中',
-              loadReadyText: '上拉加载....',
+            key: _easyRefreshKey,
+            bgColor: Colors.white,
+            textColor: Colors.pink,
+            moreInfoColor: Colors.pink,
+            showMore: true,
+            noMoreText: '',
+            moreInfo: '加载中',
+            loadReadyText: '上拉加载....',
           ),
           loadMore: () async {
             _getCateGoods();
@@ -70,18 +95,22 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
               });
             });
           },
-        child: CustomScrollView(
-          slivers: <Widget>[
-            CateHotProduct(productImage: productImage,productId: productId,),
-            SecondaryCategory(secondaryCategoryList: secondaryCategoryList,),
-            _buildStickyBar(),
-            SliverProductList(list: goodsList),
-          ],
+          child: CustomScrollView(
+            controller: _controller,
+            slivers: <Widget>[
+              CateHotProduct(
+                productImage: productImage,
+                productId: productId,
+              ),
+              SecondaryCategory(
+                secondaryCategoryList: secondaryCategoryList,
+              ),
+              _buildStickyBar(),
+              SliverProductList(list: goodsList),
+            ],
+          ),
         ),
-
-      );
-
-
+    );
   }
 
   Widget _buildStickyBar() {
@@ -89,14 +118,14 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
       pinned: true, //是否固定在顶部
       floating: true,
       delegate: _SliverAppBarDelegate(
-          maxHeight: 50.0,
-          minHeight: 50.0,
-          child: Container(
-            padding: EdgeInsets.only(left: 16),
-            color: Colors.blue,
-            alignment: Alignment.centerLeft,
-            child: Text("浮动", style: TextStyle(fontSize: 18)),
-          ),
+        maxHeight: 50.0,
+        minHeight: 50.0,
+        child: Container(
+          padding: EdgeInsets.only(left: 16),
+          color: Colors.blue,
+          alignment: Alignment.centerLeft,
+          child: Text("浮动", style: TextStyle(fontSize: 18)),
+        ),
       ),
     );
   }
@@ -113,18 +142,20 @@ class _HomePageOtherState extends State<HomePageOther> with AutomaticKeepAliveCl
 }
 
 class CateHotProduct extends StatelessWidget {
-
   final String productImage;
   final String productId;
 
-  CateHotProduct({Key key,@required this.productId,@required this.productImage}):super(key :
-  key);
+  CateHotProduct(
+      {Key key, @required this.productId, @required this.productImage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: InkWell(
-        onTap: (){print(productId);},
+        onTap: () {
+          print(productId);
+        },
         child: Image.network(productImage),
       ),
     );
@@ -132,7 +163,6 @@ class CateHotProduct extends StatelessWidget {
 }
 
 class SecondaryCategory extends StatelessWidget {
-
   final List secondaryCategoryList;
 
   SecondaryCategory({Key key, this.secondaryCategoryList}) : super(key: key);

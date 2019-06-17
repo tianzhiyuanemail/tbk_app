@@ -34,6 +34,8 @@ dependencies:
   url_launcher: ^5.0.1
   #  状态
   provide: ^1.0.2
+  #  阿里百川电商Flutter插件
+#  nautilus: ^0.0.6
 
 
 dev_dependencies:

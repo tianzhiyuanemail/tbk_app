@@ -6,10 +6,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tbk_app/config/service_method.dart';
 import 'package:tbk_app/config/service_url.dart';
+import 'package:tbk_app/modle/tab_item_modle.dart';
+import 'package:tbk_app/pages/home/tab_bar_view.dart';
 import 'package:tbk_app/widgets/search_text_field_widget.dart';
 import 'dart:math' as math;
 
-import 'package:tbk_app/widgets/tab_bar_view_widget.dart';
 
 import '../../router.dart';
 
@@ -24,8 +25,10 @@ class HomePage extends StatefulWidget {
 /// 首页 state
 class _BookAudioVideoPageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  List<TabItem> titleList = [TabItem("首页", "","", true), TabItem("618", "","", true)];
+  List<Widget> tabList = [];
+  int tabsLength = 12;
 
-  List<Widget> tabList = new List(10);
   TabController tabController;
   var hintText = "替换这里的文字";
 
@@ -33,8 +36,7 @@ class _BookAudioVideoPageState extends State<HomePage>
   void initState() {
     super.initState();
     this.getTabList();
-    tabController = TabController(vsync: this, length: tabList.length);
-    
+    tabController = TabController(vsync: this, length: tabsLength);
   }
 
   @override
@@ -42,7 +44,7 @@ class _BookAudioVideoPageState extends State<HomePage>
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
 
     return DefaultTabController(
-        length: tabList.length,
+        length: tabsLength,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.pink,
@@ -85,9 +87,7 @@ class _BookAudioVideoPageState extends State<HomePage>
                 color: Colors.black54,
                 icon: Icon(Icons.border_horizontal),
                 // tooltip: 'Restitch it',
-                onPressed: () {
-
-                },
+                onPressed: () {},
               ),
             ],
             bottom: PreferredSize(
@@ -110,28 +110,30 @@ class _BookAudioVideoPageState extends State<HomePage>
               preferredSize: Size(10, 10),
             ),
           ),
-
           body: new Container(
             color: Colors.white,
             child: new SafeArea(
-              child: FlutterTabBarView(tabController: tabController),
+              child: FlutterTabBarView(tabController: tabController, titleList: titleList),
             ),
           ),
         ));
   }
 
- void getTabList() {
+  void getTabList() {
     getHttpRes('cateListByPid', 'parentId=0').then((val) {
       setState(() {
-        List titleList = val['data'] as List;
-        tabList = titleList.sublist(0,10)
-            .map((cate) => Text(
-             'tbkName',
-//              cate['tbkName'],
-              style: TextStyle(fontSize: 15),
-        )) .toList();
+        List cateList = val['data'] as List;
+        titleList.addAll(cateList
+            .map((cate) => TabItem(cate['tbkName'].toString(),
+            cate['cateId'].toString(),"", true))
+            .toList().sublist(0,10));
+
+        tabList = titleList
+            .map((tabItem) => tabItem.isName
+                ? Text(tabItem.name, style: TextStyle(fontSize: 15))
+                : Image.network(tabItem.img))
+            .toList();
       });
     });
-
   }
 }

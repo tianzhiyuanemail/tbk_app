@@ -12,7 +12,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/config/service_method.dart';
-import 'package:tbk_app/widgets/go_home_widget.dart';
+import 'package:tbk_app/widgets/back_top_widget.dart';
 import 'package:tbk_app/widgets/product_list_view_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -58,7 +58,7 @@ class _HomePageFirstState extends State<HomePageFirst>
 
     //监听滚动事件，打印滚动位置
     _controller.addListener(() {
-      if (_controller.offset < 100 && showToTopBtn) {
+      if (_controller.offset < 1000 && showToTopBtn) {
         setState(() {
           setState(() {
             showToTopBtn = false;
@@ -83,8 +83,7 @@ class _HomePageFirstState extends State<HomePageFirst>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:
-          GoHomeButton(controller: _controller, showToTopBtn: showToTopBtn),
+      floatingActionButton: BackTopButton(controller: _controller, showToTopBtn: showToTopBtn),
       body: EasyRefresh(
         refreshFooter: ClassicsFooter(
             key: _easyRefreshKey,
