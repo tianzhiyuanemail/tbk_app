@@ -89,7 +89,7 @@ class MyInfoPage extends StatelessWidget {
 //        leading: Icon(Icons.add),
         //2. ? 控制是否应该尝试暗示前导小部件为null
         automaticallyImplyLeading: true,
-        elevation: 1,
+        elevation: 4,
         //APP bar 的颜色，默认值为 ThemeData.primaryColor。改值通常和下面的三个属性一起使用
 //        backgroundColor: Colors.pink,
         //App bar 的亮度，有白色和黑色两种主题，默认值为 ThemeData.primaryColorBrightness
@@ -114,7 +114,7 @@ class MyInfoPage extends StatelessWidget {
         snap: true,
 
         //当前界面的标题文字
-//        title: Text('当前界面的标题文字'),
+        title: Text('当前界面的标题文字'),
         //5.一个显示在 AppBar 下方的控件，高度和 AppBar 高度一样，
         // 可以实现一些特殊的效果，该属性通常在 SliverAppBar 中使用
         flexibleSpace: FlexibleSpaceBar(
