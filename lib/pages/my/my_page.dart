@@ -13,43 +13,8 @@ class MyInfoPage extends StatefulWidget {
 }
 
 class _MyInfoPageState extends State<MyInfoPage> {
-  static const double IMAGE_ICON_WIDTH = 30.0;
-  static const double ARROW_ICON_WIDTH = 16.0;
-
   var userAvatar = "http://kaze-sora.com/sozai/blog_haru/blog_mitubachi01.jpg";
   var userName = 'rre';
-  var titles = [
-    "我的消息",
-    "阅读记录",
-    "我的博客",
-    "我的问答",
-    "我的活动",
-    "我的团队",
-    "邀请好友",
-    "我的消息",
-    "阅读记录",
-    "我的博客",
-    "我的问答",
-    "我的活动",
-    "我的团队",
-    "邀请好友"
-  ];
-  var imagePaths = [
-    "assets/images/ic_my_message.png",
-    "assets/images/ic_my_blog.png",
-    "assets/images/ic_my_blog.png",
-    "assets/images/ic_my_question.png",
-    "assets/images/ic_discover_pos.png",
-    "assets/images/ic_my_team.png",
-    "assets/images/ic_my_recommend.png"
-  ];
-
-  var titleTextStyle = new TextStyle(fontSize: 16.0);
-  var rightArrowIcon = new Image.asset(
-    'assets/images/ic_arrow_right.png',
-    width: ARROW_ICON_WIDTH,
-    height: ARROW_ICON_WIDTH,
-  );
 
   ScrollController _scrollController = ScrollController();
 
@@ -488,7 +453,10 @@ class UserButtons extends StatelessWidget {
               ),
               Container(
                 margin: EdgeInsets.only(top: 3, bottom: 5),
-                child: Text(title,style: TextStyle(fontSize: 11),),
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 11),
+                ),
               ),
             ],
           ),
@@ -524,7 +492,6 @@ class UserButtons extends StatelessWidget {
   }
 }
 
-
 ///  我的工具
 class UserTools extends StatelessWidget {
   Widget _userToolsText() {
@@ -548,7 +515,10 @@ class UserTools extends StatelessWidget {
               ),
               Container(
                 margin: EdgeInsets.only(top: 3, bottom: 5),
-                child: Text(title,style: TextStyle(fontSize: 11),),
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 11),
+                ),
               ),
             ],
           ),
@@ -610,10 +580,9 @@ class UserTools extends StatelessWidget {
 
 ///  我的成长值
 class UsersGrowthValue extends StatelessWidget {
-
   String growthValue = '24';
 
-  UsersGrowthValue( this.growthValue);
+  UsersGrowthValue(this.growthValue);
 
   Widget _userToolsText() {
     return Container(
@@ -622,7 +591,6 @@ class UsersGrowthValue extends StatelessWidget {
       child: Text("我的工具"),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -636,9 +604,9 @@ class UsersGrowthValue extends StatelessWidget {
           _imageInkWell(),
         ],
       ),
-
     );
   }
+
   _growthValue() {
     return Container(
       child: Row(
@@ -652,34 +620,36 @@ class UsersGrowthValue extends StatelessWidget {
                 Text("我的成长值"),
                 Container(
                   margin: EdgeInsets.only(left: 10),
-                  child: Text(growthValue,style: TextStyle(color: Colors.red,fontSize:
-                  20),),
+                  child: Text(
+                    growthValue,
+                    style: TextStyle(color: Colors.red, fontSize: 20),
+                  ),
                 )
               ],
             ),
           ),
           InkWell(
-            onTap: (){},
+            onTap: () {},
             child: Container(
               alignment: Alignment.centerLeft,
               margin: EdgeInsets.only(right: 20),
               child: Row(
                 children: <Widget>[
                   Text("提成成长值"),
-                  Image.asset("assets/images/ic_tab_home_active.png", width:
-                  20.0, height: 20.0)
+                  Image.asset("assets/images/ic_tab_home_active.png",
+                      width: 20.0, height: 20.0)
                 ],
               ),
             ),
           )
-
         ],
       ),
     );
   }
+
   _imageInkWell() {
     return InkWell(
-      onTap: (){},
+      onTap: () {},
       child: Container(
         height: 100,
         decoration: BoxDecoration(
@@ -688,11 +658,8 @@ class UsersGrowthValue extends StatelessWidget {
                   "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1551944816841&di=329f747e3f4c2554f24c609fd6f77c49&imgtype=0&src=http%3A%2F%2Fimg.tupianzj.com%2Fuploads%2Fallimg%2F160610%2F9-160610114520.jpg"),
               fit: BoxFit.cover,
             ),
-            borderRadius: BorderRadius.circular(10)
-        ),
+            borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
-
-
 }

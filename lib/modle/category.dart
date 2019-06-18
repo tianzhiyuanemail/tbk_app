@@ -27,7 +27,6 @@ class CategoryBigModel {
         tbkName:json['tbkName'].toString(),
         tbkImg:json['tbkImg'].toString(),
     );
-
   }
 
 }
