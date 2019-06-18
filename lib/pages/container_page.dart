@@ -59,7 +59,7 @@ class _ContainerPageState extends State<ContainerPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 248, 248, 248),
+      backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
       items: this.itemList,
       onTap: (int index) {
