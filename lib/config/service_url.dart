@@ -5,4 +5,5 @@ const servicePath={
   'cateListAll': serviceUrl+'tbk/cateListAll.json', // 商品分类
   'cateListByPid': serviceUrl+'tbk/cateListByPid.json', // 商品一级分类
   'getProductInfo': serviceUrl+'tbk/getProductInfo.json', // 商品信息
+  'getProductDetail': 'http://h5api.m.taobao.com/h5/mtop.taobao.detail.getdesc/6.0/', // 商品信息
 };

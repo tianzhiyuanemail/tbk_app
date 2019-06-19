@@ -123,7 +123,7 @@ class _HomePageFirstState extends State<HomePageFirst>
             FlootTitle(picture_address: picture_address),
             FlootContent(flootGoodsList: flootGoodsList),
             hotTitle,
-            ProductList(list: hotGoodsList)
+            ProductListGridView(list: hotGoodsList)
           ],
         ),
       ),

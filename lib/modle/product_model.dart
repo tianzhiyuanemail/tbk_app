@@ -2,6 +2,8 @@
  * Copyright (C) 2019 Baidu, Inc. All Rights Reserved.
  */
 
+import 'package:tbk_app/util/conversion_util.dart';
+
 class ProductModel {
   String commissionRate;
   String commissionType;
@@ -108,9 +110,3 @@ class ProductModel {
   }
 }
 
-/// dynamicToString
-List<String> listOfDToS(List<dynamic> dynamicList){
-return  dynamicList.map((json){
-    return json.toString();
-  }).toList();
-}

@@ -106,7 +106,7 @@ class _HomePageOtherState extends State<HomePageOther>
                 secondaryCategoryList: secondaryCategoryList,
               ),
               _buildStickyBar(),
-              SliverProductList(list: goodsList),
+              SliverProductListSliverGrid(list: goodsList),
             ],
           ),
         ),
