@@ -25,14 +25,16 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_html_widget/flutter_html_widget.dart';
 
 class ProductDetail extends StatefulWidget {
+  String productId;
+
+  ProductDetail(this.productId);
+
   @override
   _ProductDetailState createState() => _ProductDetailState();
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  ProductModel productModel = ProductModel();
-
-  String productId = '588618803525';
+  ProductModel productModel;
 
   bool hidden = true;
 
@@ -56,34 +58,36 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        reverse: false,
-        slivers: <Widget>[
-          SliverToBoxAdapter(child: null),
-          SliverPersistentHeader(
-            pinned: true, //是否固定在顶部
-            floating: true,
-            delegate: _SliverAppBarDelegate(
-              maxHeight: 50.0,
-              minHeight: 50.0,
-              child: Container(
+      body: productModel == null
+          ? Text("")
+          : CustomScrollView(
+              reverse: false,
+              slivers: <Widget>[
+                SliverToBoxAdapter(child: null),
+                SliverPersistentHeader(
+                  pinned: true, //是否固定在顶部
+                  floating: true,
+                  delegate: _SliverAppBarDelegate(
+                    maxHeight: 50.0,
+                    minHeight: 50.0,
+                    child: Container(
 //            padding: EdgeInsets.only(left: 16),
-                color: Colors.red,
-//            alignment: Alignment.centerLeft,
-//            child: Text("宝贝 详情 推荐", style: TextStyle(fontSize: 18)),
-              ),
+                      color: Colors.red,
+            alignment: Alignment.centerLeft,
+            child: Text("宝贝 详情 推荐", style: TextStyle(fontSize: 18)),
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(_sliverListChild()),
+                )
+              ],
             ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(_sliverListChild()),
-          )
-        ],
-      ),
     );
   }
 
   void _getProductInfo() {
-    getHttpRes('getProductInfo', 'productId=' + productId).then((val) {
+    getHttpRes('getProductInfo', 'productId=' + widget.productId).then((val) {
       setState(() {
         productModel = ProductModel.fromJson(val['data']['product']);
         print(productModel.toString());
@@ -97,15 +101,15 @@ class _ProductDetailState extends State<ProductDetail> {
     list.add(SwiperDiy(list: productModel.smallImages));
     list.add(ProductInfomation(productModel));
     list.add(ShopInfomation(productModel));
-    list.add(ItemDetails(productModel.numIid));
-    list.add(ProductRecommend(productList.sublist(0, 6)));
+    list.add(ItemDetails(productModel));
+    list.add(ProductRecommend(productList));
     return list;
   }
 }
 
 /// 轮播组件编写
 class SwiperDiy extends StatelessWidget {
-  final List list;
+  List list = [];
 
   SwiperDiy({Key key, this.list}) : super(key: key);
 
@@ -151,7 +155,7 @@ class ProductInfomation extends StatelessWidget {
               children: [
                 TextSpan(text: "券后价 ¥ ", style: TextStyle()),
                 TextSpan(
-                  text: productModel.afterCouponPrice,
+                  text: '${productModel.afterCouponPrice}',
                   style: TextStyle(
                     fontSize: 20,
                   ),
@@ -175,7 +179,7 @@ class ProductInfomation extends StatelessWidget {
                 children: [
                   TextSpan(text: "预估收益:¥ ", style: TextStyle()),
                   TextSpan(
-                    text: productModel.reservePrice,
+                    text: "${productModel.reservePrice}",
                     style: TextStyle(),
                   ),
                 ],
@@ -196,7 +200,7 @@ class ProductInfomation extends StatelessWidget {
           Container(
               child: Text.rich(
             TextSpan(
-              text: "原价 ¥ " + productModel.zkFinalPrice,
+              text: "原价 ¥ ${productModel.zkFinalPrice}",
               style: TextStyle(
                 color: Colors.black38,
                 wordSpacing: 4,
@@ -217,7 +221,7 @@ class ProductInfomation extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                      text: "已售" + productModel.tkTotalSales,
+                      text: "已售${productModel.tkTotalSales}",
                       style: TextStyle()),
                 ],
               ),
@@ -246,7 +250,7 @@ class ProductInfomation extends StatelessWidget {
             ),
           ),
           Text(
-            "          " + productModel.title,
+            "          ${productModel.title}",
             style: TextStyle(
               color: Colors.black,
               fontSize: 11,
@@ -472,9 +476,9 @@ class ShopInfomation extends StatelessWidget {
 
 /// 商品详情页
 class ItemDetails extends StatefulWidget {
-  String productId;
+  ProductModel productModel;
 
-  ItemDetails(this.productId);
+  ItemDetails(productModel);
 
   @override
   _ItemDetailsState createState() => _ItemDetailsState();

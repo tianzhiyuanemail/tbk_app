@@ -37,7 +37,7 @@ class _ContainerPageState extends State<ContainerPage> {
   @override
   void initState() {
     super.initState();
-    pages..add(new HomePage())..add(CatePage())..add(ProductDetail())..add
+    pages..add(new HomePage())..add(CatePage())..add(ProductDetail('588618803525'))..add
       (MyInfoPage());
 
     if (itemList == null) {

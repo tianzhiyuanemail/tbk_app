@@ -5,35 +5,49 @@ import 'package:flutter/services.dart';
 import 'package:provide/provide.dart';
 import 'package:tbk_app/pages/splash/splash_widget.dart';
 import 'package:tbk_app/provide/child_cate.dart';
+import 'package:fluro/fluro.dart';
+import 'package:tbk_app/router/routers.dart';
+import 'package:tbk_app/router/application.dart';
+
 
 void main() {
   var childCate  = ChildCate();
 
+  /// 初始化 状态
   var providers = Providers();
   providers
     ..provide(Provider<ChildCate>.value(childCate))
   ;
-  // 强制竖屏
+  /// 强制竖屏
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]);
 
-  runApp(ProviderNode(child: MyApp(),providers: providers,));
-
+  /// 设置Android头部的导航栏透明
   if(Platform.isAndroid){
-    /// 设置Android头部的导航栏透明
     SystemUiOverlayStyle style = new SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(style);
   }
+
+  runApp(ProviderNode(child: MyApp(),providers: providers,));
+
+
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
+
+    /// 初始化路由
+    final router = Router();
+    Routers.configureRouters(router);
+    Application.router = router;
+
     return new RestartWidget(
       child: MaterialApp(
+        onGenerateRoute: Application.router.generator,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(backgroundColor: Colors.white),
         home: Scaffold(
