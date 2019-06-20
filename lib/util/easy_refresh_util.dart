@@ -14,7 +14,7 @@ class EasyRefreshUtil {
        textColor: Colors.pink,
        moreInfoColor: Colors.pink,
        showMore: true,
-       noMoreText: '没有更多了',
+       noMoreText: '加载完成',
        moreInfo: '....',
        loadReadyText: '加载中....',
        loadedText: "加载完成",

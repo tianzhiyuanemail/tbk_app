@@ -760,7 +760,7 @@ class DetailsBottom extends StatelessWidget {
                       width: 30.0, height: 30.0),
                   Text(
                     "首页",
-                    style: TextStyle(color: Colors.black,fontSize: 12),
+                    style: TextStyle(color: Colors.black, fontSize: 12),
                   )
                 ],
               ),
@@ -776,7 +776,7 @@ class DetailsBottom extends StatelessWidget {
                       width: 30.0, height: 30.0),
                   Text(
                     "收藏",
-                    style: TextStyle(color: Colors.black,fontSize: 12),
+                    style: TextStyle(color: Colors.black, fontSize: 12),
                   )
                 ],
               ),
@@ -793,10 +793,10 @@ class DetailsBottom extends StatelessWidget {
                   height: ScreenUtil().setHeight(70),
                   padding: EdgeInsets.only(left: 20),
                   decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
-    bottomLeft: Radius.circular(20))
-                  ),
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          bottomLeft: Radius.circular(20))),
                   child: Row(
                     children: <Widget>[
                       Image.asset('assets/images/ic_tab_home_normal.png',
@@ -817,13 +817,12 @@ class DetailsBottom extends StatelessWidget {
                   alignment: Alignment.center,
                   width: ScreenUtil().setWidth(250),
                   height: ScreenUtil().setHeight(70),
-
                   padding: EdgeInsets.only(left: 20),
                   decoration: BoxDecoration(
                       color: Colors.red,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(20),
-                          bottomRight: Radius.circular(20))
-                  ),
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          bottomRight: Radius.circular(20))),
                   child: Row(
                     children: <Widget>[
                       Image.asset('assets/images/ic_tab_home_normal.png',

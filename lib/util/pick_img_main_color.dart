@@ -1,4 +1,3 @@
-//import 'package:palette_generator/palette_generator.dart';
 //import 'package:flutter/rendering.dart';
 //import 'package:flutter/material.dart';
 //

@@ -1,9 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/constant/constant.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../container_page.dart';
 
 ///打开APP首页
@@ -24,15 +24,13 @@ class _SplashWidgetState extends State<SplashWidget> {
       children: <Widget>[
         Offstage( /// 主程序
           offstage: showAd,
-          child: new ContainerPage(),
+          child:  ContainerPage(),
         ),
         Offstage( /// 欢迎页面
           offstage: !showAd,
-          child: new InkWell( /// 设置背景图片点击事件
+          child:  InkWell( /// 设置背景图片点击事件
             onTap: ()=>print("222222222222222222"),
             child: Container( ///  内容
-//              width: ScreenUtil.screenWidth,
-//              height: ScreenUtil.screenHeight,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(Constant.ASSETS_IMG + 'shouye.jpg'),
@@ -107,11 +105,8 @@ class _SplashWidgetState extends State<SplashWidget> {
       ],
     );
   }
-  
-  
-  
-}
 
+}
 
 
 class CountDownWidget extends StatefulWidget {

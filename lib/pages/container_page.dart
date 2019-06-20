@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tbk_app/pages/my/my_page.dart';
 import 'package:tbk_app/pages/product/product_deatil_page.dart';
 
@@ -91,7 +90,6 @@ class _ContainerPageState extends State<ContainerPage> {
         index: _selectIndex,
         children: pages,
       ),
-      //  pages[_selectIndex],
     );
   }
 }
