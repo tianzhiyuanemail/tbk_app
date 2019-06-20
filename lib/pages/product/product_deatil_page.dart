@@ -1,13 +1,7 @@
 /*
  */
 
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
-import 'package:flutter/widgets.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,15 +9,17 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_html_widget/flutter_html_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/config/service_method.dart';
 import 'package:tbk_app/modle/product_model.dart';
+import 'package:tbk_app/router/application.dart';
+import 'package:tbk_app/util/easy_refresh_util.dart';
 import 'package:tbk_app/widgets/back_top_widget.dart';
 import 'package:tbk_app/widgets/product_list_view_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_html_widget/flutter_html_widget.dart';
 
+// ignore: must_be_immutable
 class ProductDetail extends StatefulWidget {
   String productId;
 
@@ -34,10 +30,17 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  ScrollController _controller = ScrollController();
+  GlobalKey<RefreshFooterState> _refreshFooterState =
+  GlobalKey<RefreshFooterState>();
+  GlobalKey<RefreshHeaderState> _refreshHeaderState =
+  GlobalKey<RefreshHeaderState>();
+
+
+  bool showToTopBtn = false; ///是否显示“返回到顶部”按钮
+  bool showSliverPersistentHeader = false; ///是否显示 导航栏
+
   ProductModel productModel;
-
-  bool hidden = true;
-
   List productList = [];
 
   @override
@@ -45,6 +48,31 @@ class _ProductDetailState extends State<ProductDetail> {
     super.initState();
 
     _getProductInfo();
+
+    ///监听滚动事件
+    _controller.addListener(() {
+      /// 导航栏监听
+      if (_controller.offset < 200) {
+        setState(() {
+          showSliverPersistentHeader = false;
+        });
+      } else {
+        setState(() {
+          showSliverPersistentHeader = true;
+        });
+      }
+
+      ///是否显示“返回到顶部”按钮
+      if (_controller.offset < 1000 && showToTopBtn) {
+        setState(() {
+          showToTopBtn = false;
+        });
+      } else if (_controller.offset >= 1000 && showToTopBtn == false) {
+        setState(() {
+          showToTopBtn = true;
+        });
+      }
+    });
 
     /// todo 商品推荐接口 暂时调用首页商品接口
     getHomePageGoods(1).then((val) {
@@ -56,54 +84,104 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   @override
+  void dispose() {
+    ///为了避免内存泄露，需要调用_controller.dispose
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: productModel == null
-          ? Text("")
-          : CustomScrollView(
-              reverse: false,
-              slivers: <Widget>[
-                SliverToBoxAdapter(child: null),
-                SliverPersistentHeader(
-                  pinned: true, //是否固定在顶部
-                  floating: true,
-                  delegate: _SliverAppBarDelegate(
-                    maxHeight: 50.0,
-                    minHeight: 50.0,
-                    child: Container(
-//            padding: EdgeInsets.only(left: 16),
-                      color: Colors.red,
-            alignment: Alignment.centerLeft,
-            child: Text("宝贝 详情 推荐", style: TextStyle(fontSize: 18)),
-                    ),
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate(_sliverListChild()),
-                )
-              ],
-            ),
+        floatingActionButton: BackTopButton(controller: _controller, showToTopBtn: showToTopBtn),
+        body: productModel == null
+            ? Text("")
+            : EasyRefresh(
+                refreshFooter: EasyRefreshUtil.classicsFooter(_refreshFooterState),
+                refreshHeader: EasyRefreshUtil.classicsHeader(_refreshHeaderState),
+                loadMore: () async {},
+                onRefresh: () async {},
+                child:_customScrollView (),
+              ),
     );
   }
 
+  /// 调用后台商品接口
   void _getProductInfo() {
     getHttpRes('getProductInfo', 'productId=' + widget.productId).then((val) {
       setState(() {
         productModel = ProductModel.fromJson(val['data']['product']);
-        print(productModel.toString());
       });
     });
   }
 
+  /// CustomScrollView
+  CustomScrollView _customScrollView (){
+    return CustomScrollView(
+      controller: _controller,
+      reverse: false,
+      slivers: <Widget>[
+        SliverToBoxAdapter(child: null),
+//        SliverPersistentHeader(
+//          pinned: true, //是否固定在顶部
+//          floating: true,
+//          delegate: _SliverAppBarDelegate(
+//            maxHeight: showSliverPersistentHeader ? 50 : 0.0,
+//            minHeight: showSliverPersistentHeader ? 50 : 0.0,
+//            child: ProductHeaderChild(
+//                showSliverPersistentHeader:
+//                showSliverPersistentHeader),
+//          ),
+//        ),
+        SliverList(
+          delegate: SliverChildListDelegate(_sliverListChild()),
+        )
+      ],
+    );
+  }
+
+  /// CustomScrollView _sliverListChild
   List<Widget> _sliverListChild() {
     List<Widget> list = List();
 
     list.add(SwiperDiy(list: productModel.smallImages));
-    list.add(ProductInfomation(productModel));
-    list.add(ShopInfomation(productModel));
-    list.add(ItemDetails(productModel));
-    list.add(ProductRecommend(productList));
+    list.add(ProductInfomation(productModel: productModel));
+    list.add(ShopInfomation(productModel: productModel));
+    list.add(ItemDetails(productModel: productModel));
+    list.add(ProductRecommend(list: productList));
     return list;
+  }
+}
+
+/// 自定义导航栏
+class ProductHeaderChild extends StatelessWidget {
+  bool showSliverPersistentHeader;
+
+  ProductHeaderChild({this.showSliverPersistentHeader});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: showSliverPersistentHeader ? Colors.white : Colors.transparent,
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(top: 0, bottom: 0),
+      padding: EdgeInsets.only(top: 10, bottom: 0),
+      height: 50,
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            onPressed: () {
+              Application.router.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+              size: 20,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -118,14 +196,22 @@ class SwiperDiy extends StatelessWidget {
     return Container(
       height: ScreenUtil().setHeight(750),
       width: ScreenUtil().setWidth(750),
-      child: Swiper(
-        index: 0,
-        itemBuilder: (BuildContext context, int index) {
-          return Image.network("${list[index]}", fit: BoxFit.fill);
-        },
-        itemCount: list.length,
-        pagination: new SwiperPagination(),
-        autoplay: false,
+      child: Stack(
+        children: <Widget>[
+          Swiper(
+            index: 0,
+            itemBuilder: (BuildContext context, int index) {
+              return Image.network("${list[index]}", fit: BoxFit.fill);
+            },
+            itemCount: list.length,
+            pagination: new SwiperPagination(),
+            autoplay: false,
+          ),
+          Offstage(
+            offstage: false,
+            child: ProductHeaderChild(showSliverPersistentHeader: true),
+          )
+        ],
       ),
     );
   }
@@ -135,7 +221,7 @@ class SwiperDiy extends StatelessWidget {
 class ProductInfomation extends StatelessWidget {
   ProductModel productModel;
 
-  ProductInfomation([this.productModel]);
+  ProductInfomation({this.productModel});
 
   Widget _row1() {
     return Container(
@@ -337,7 +423,7 @@ class ProductInfomation extends StatelessWidget {
 class ShopInfomation extends StatelessWidget {
   ProductModel productModel;
 
-  ShopInfomation([this.productModel]);
+  ShopInfomation({this.productModel});
 
   Widget _row1() {
     return Container(
@@ -478,7 +564,7 @@ class ShopInfomation extends StatelessWidget {
 class ItemDetails extends StatefulWidget {
   ProductModel productModel;
 
-  ItemDetails(productModel);
+  ItemDetails({this.productModel});
 
   @override
   _ItemDetailsState createState() => _ItemDetailsState();
@@ -499,7 +585,8 @@ class _ItemDetailsState extends State<ItemDetails> {
 
   void _getItemDeatilRichText() {
     if (richText == '' || richText == null) {
-      getHttpRes('getProductDetail', 'data=%7B"id":"' + '588618803525' + '"%7D')
+      getHttpRes('getProductDetail',
+              'data=%7B"id":"${widget.productModel.numIid}"%7D')
           .then((val) {
         setState(() {
           hidden = !hidden;
@@ -562,7 +649,7 @@ class _ItemDetailsState extends State<ItemDetails> {
 class ProductRecommend extends StatelessWidget {
   List list;
 
-  ProductRecommend(this.list);
+  ProductRecommend({this.list});
 
   Widget _recommendText() {
     return Container(
@@ -615,6 +702,72 @@ class ProductRecommend extends StatelessWidget {
     );
   }
 }
+
+
+class DetailsBottom extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    return Container(
+      width:ScreenUtil().setWidth(750),
+      color: Colors.white,
+      height: ScreenUtil().setHeight(80),
+      child: Row(
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: ScreenUtil().setWidth(110) ,
+                  alignment: Alignment.center,
+                  child:Icon(
+                    Icons.shopping_cart,
+                    size: 35,
+                    color: Colors.red,
+                  ),
+                ) ,
+              ),
+            ],
+          ),
+
+          InkWell(
+            onTap: ()async {
+
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: ScreenUtil().setWidth(320),
+              height: ScreenUtil().setHeight(80),
+              color: Colors.green,
+              child: Text(
+                '加入购物车',
+                style: TextStyle(color: Colors.white,fontSize: ScreenUtil().setSp(28)),
+              ),
+            ) ,
+          ),
+          InkWell(
+            onTap: ()async{
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: ScreenUtil().setWidth(320),
+              height: ScreenUtil().setHeight(80),
+              color: Colors.red,
+              child: Text(
+                '马上购买',
+                style: TextStyle(color: Colors.white,fontSize: ScreenUtil().setSp(28)),
+              ),
+            ) ,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate({

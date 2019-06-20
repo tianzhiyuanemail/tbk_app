@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2019 Baidu, Inc. All Rights Reserved.
  */
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tbk_app/config/service_method.dart';
+import 'package:tbk_app/util/easy_refresh_util.dart';
 import 'package:tbk_app/widgets/back_top_widget.dart';
-import 'dart:math' as math;
-
 import 'package:tbk_app/widgets/product_list_view_widget.dart';
 
 class HomePageOther extends StatefulWidget {
@@ -22,6 +22,12 @@ class HomePageOther extends StatefulWidget {
 class _HomePageOtherState extends State<HomePageOther>
     with AutomaticKeepAliveClientMixin {
   ScrollController _controller = new ScrollController();
+
+  GlobalKey<RefreshFooterState> _refreshFooterState =
+  GlobalKey<RefreshFooterState>();
+  GlobalKey<RefreshHeaderState> _refreshHeaderState =
+  GlobalKey<RefreshHeaderState>();
+
   bool showToTopBtn = false; //是否显示“返回到顶部”按钮
 
   String productId = "1234";
@@ -30,10 +36,7 @@ class _HomePageOtherState extends State<HomePageOther>
 
   List secondaryCategoryList = List(10);
   List goodsList = [];
-
   int page = 0;
-  GlobalKey<RefreshFooterState> _easyRefreshKey =
-      new GlobalKey<RefreshFooterState>();
 
   @override
   bool get wantKeepAlive => true;
@@ -43,7 +46,6 @@ class _HomePageOtherState extends State<HomePageOther>
     _getCateGoods();
     //监听滚动事件，打印滚动位置
     _controller.addListener(() {
-
       if (_controller.offset < 1000 && showToTopBtn) {
         setState(() {
           setState(() {
@@ -62,7 +64,7 @@ class _HomePageOtherState extends State<HomePageOther>
 
   @override
   void dispose() {
-    //为了避免内存泄露，需要调用_controller.dispose
+    ///为了避免内存泄露，需要调用_controller.dispose
     _controller.dispose();
     super.dispose();
   }
@@ -70,46 +72,38 @@ class _HomePageOtherState extends State<HomePageOther>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton:
-            BackTopButton(controller: _controller, showToTopBtn: showToTopBtn),
-        body: EasyRefresh(
-          refreshFooter: ClassicsFooter(
-            key: _easyRefreshKey,
-            bgColor: Colors.white,
-            textColor: Colors.pink,
-            moreInfoColor: Colors.pink,
-            showMore: true,
-            noMoreText: '',
-            moreInfo: '加载中',
-            loadReadyText: '上拉加载....',
-          ),
-          loadMore: () async {
-            _getCateGoods();
-          },
-          onRefresh: () async {
-            getHomePageGoods(1).then((val) {
-              List swiper = val['data'];
-              setState(() {
-                goodsList = swiper;
-                page = 1;
-              });
+      floatingActionButton:
+          BackTopButton(controller: _controller, showToTopBtn: showToTopBtn),
+      body: EasyRefresh(
+        refreshFooter: EasyRefreshUtil.classicsFooter(_refreshFooterState),
+        refreshHeader: EasyRefreshUtil.classicsHeader(_refreshHeaderState),
+        loadMore: () async {
+          _getCateGoods();
+        },
+        onRefresh: () async {
+          getHomePageGoods(1).then((val) {
+            List swiper = val['data'];
+            setState(() {
+              goodsList = swiper;
+              page = 1;
             });
-          },
-          child: CustomScrollView(
-            controller: _controller,
-            slivers: <Widget>[
-              CateHotProduct(
-                productImage: productImage,
-                productId: productId,
-              ),
-              SecondaryCategory(
-                secondaryCategoryList: secondaryCategoryList,
-              ),
-              _buildStickyBar(),
-              SliverProductListSliverGrid(list: goodsList),
-            ],
-          ),
+          });
+        },
+        child: CustomScrollView(
+          controller: _controller,
+          slivers: <Widget>[
+            CateHotProduct(
+              productImage: productImage,
+              productId: productId,
+            ),
+            SecondaryCategory(
+              secondaryCategoryList: secondaryCategoryList,
+            ),
+            _buildStickyBar(),
+            SliverProductListSliverGrid(list: goodsList),
+          ],
         ),
+      ),
     );
   }
 

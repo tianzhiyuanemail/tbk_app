@@ -10,9 +10,10 @@ class BackTopButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Offstage( /// 主程序
+    return Offstage(
       offstage: !showToTopBtn,
       child: FloatingActionButton(
+        heroTag: null, /// 解决错误 There are multiple heroes that share the same tag within a subtree.
         backgroundColor: Colors.pink.withOpacity(0.7),
           child: Icon(Icons.arrow_upward,color: Colors.white,),
           onPressed: () {

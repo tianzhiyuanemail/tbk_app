@@ -12,6 +12,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/config/service_method.dart';
+import 'package:tbk_app/util/easy_refresh_util.dart';
 import 'package:tbk_app/widgets/back_top_widget.dart';
 import 'package:tbk_app/widgets/product_list_view_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,12 +25,14 @@ class HomePageFirst extends StatefulWidget {
 class _HomePageFirstState extends State<HomePageFirst>
     with AutomaticKeepAliveClientMixin {
   ScrollController _controller = new ScrollController();
+  GlobalKey<RefreshFooterState> _refreshFooterState =
+  GlobalKey<RefreshFooterState>();
+  GlobalKey<RefreshHeaderState> _refreshHeaderState =
+  GlobalKey<RefreshHeaderState>();
   bool showToTopBtn = false; //是否显示“返回到顶部”按钮
 
   int page = 1;
   List hotGoodsList = [];
-  GlobalKey<RefreshFooterState> _easyRefreshKey =
-      new GlobalKey<RefreshFooterState>();
   List swiper = [];
   List navigatorList = List(10);
   List recommendList = List(6);
@@ -85,15 +88,8 @@ class _HomePageFirstState extends State<HomePageFirst>
     return Scaffold(
       floatingActionButton: BackTopButton(controller: _controller, showToTopBtn: showToTopBtn),
       body: EasyRefresh(
-        refreshFooter: ClassicsFooter(
-            key: _easyRefreshKey,
-            bgColor: Colors.white,
-            textColor: Colors.pink,
-            moreInfoColor: Colors.pink,
-            showMore: true,
-            noMoreText: '',
-            moreInfo: '加载中',
-            loadReadyText: '上拉加载....'),
+        refreshFooter: EasyRefreshUtil.classicsFooter(_refreshFooterState),
+        refreshHeader: EasyRefreshUtil.classicsHeader(_refreshHeaderState),
         loadMore: () async {
           getHomePageGoods(page).then((val) {
             List swiper = val['data'];
