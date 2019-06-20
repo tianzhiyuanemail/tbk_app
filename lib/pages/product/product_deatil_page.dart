@@ -15,6 +15,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:tbk_app/config/service_method.dart';
 import 'package:tbk_app/modle/product_model.dart';
 import 'package:tbk_app/router/application.dart';
+import 'package:tbk_app/router/routers.dart';
 import 'package:tbk_app/util/easy_refresh_util.dart';
 import 'package:tbk_app/widgets/back_top_widget.dart';
 import 'package:tbk_app/widgets/product_list_view_widget.dart';
@@ -32,13 +33,16 @@ class ProductDetail extends StatefulWidget {
 class _ProductDetailState extends State<ProductDetail> {
   ScrollController _controller = ScrollController();
   GlobalKey<RefreshFooterState> _refreshFooterState =
-  GlobalKey<RefreshFooterState>();
+      GlobalKey<RefreshFooterState>();
   GlobalKey<RefreshHeaderState> _refreshHeaderState =
-  GlobalKey<RefreshHeaderState>();
+      GlobalKey<RefreshHeaderState>();
 
+  bool showToTopBtn = false;
 
-  bool showToTopBtn = false; ///是否显示“返回到顶部”按钮
-  bool showSliverPersistentHeader = false; ///是否显示 导航栏
+  ///是否显示“返回到顶部”按钮
+  bool showSliverPersistentHeader = false;
+
+  ///是否显示 导航栏
 
   ProductModel productModel;
   List productList = [];
@@ -93,16 +97,33 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: BackTopButton(controller: _controller, showToTopBtn: showToTopBtn),
-        body: productModel == null
-            ? Text("")
-            : EasyRefresh(
-                refreshFooter: EasyRefreshUtil.classicsFooter(_refreshFooterState),
-                refreshHeader: EasyRefreshUtil.classicsHeader(_refreshHeaderState),
-                loadMore: () async {},
-                onRefresh: () async {},
-                child:_customScrollView (),
-              ),
+      floatingActionButton:
+          BackTopButton(controller: _controller, showToTopBtn: showToTopBtn),
+      body: productModel == null
+          ? Text("")
+          : Stack(
+              children: <Widget>[
+                EasyRefresh(
+                  refreshFooter:
+                      EasyRefreshUtil.classicsFooter(_refreshFooterState),
+                  refreshHeader:
+                      EasyRefreshUtil.classicsHeader(_refreshHeaderState),
+                  loadMore: () async {},
+                  onRefresh: () async {},
+                  child: _customScrollView(),
+                ),
+                Offstage(
+                  offstage: !showSliverPersistentHeader,
+                  child: ProductHeaderChild(
+                      showSliverPersistentHeader: showSliverPersistentHeader),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: DetailsBottom(),
+                )
+              ],
+            ),
     );
   }
 
@@ -115,13 +136,13 @@ class _ProductDetailState extends State<ProductDetail> {
     });
   }
 
-  /// CustomScrollView
-  CustomScrollView _customScrollView (){
+  /// CustomScrollView  实现列表 以后备用
+  CustomScrollView _customScrollView() {
     return CustomScrollView(
       controller: _controller,
       reverse: false,
       slivers: <Widget>[
-        SliverToBoxAdapter(child: null),
+        //SliverToBoxAdapter(child: null),
 //        SliverPersistentHeader(
 //          pinned: true, //是否固定在顶部
 //          floating: true,
@@ -151,6 +172,20 @@ class _ProductDetailState extends State<ProductDetail> {
     list.add(ProductRecommend(list: productList));
     return list;
   }
+
+  /// _listView
+  ListView _listView() {
+    return ListView(
+      controller: _controller,
+      children: <Widget>[
+        SwiperDiy(list: productModel.smallImages),
+        ProductInfomation(productModel: productModel),
+        ShopInfomation(productModel: productModel),
+        ItemDetails(productModel: productModel),
+        ProductRecommend(list: productList),
+      ],
+    );
+  }
 }
 
 /// 自定义导航栏
@@ -165,7 +200,7 @@ class ProductHeaderChild extends StatelessWidget {
       color: showSliverPersistentHeader ? Colors.white : Colors.transparent,
       alignment: Alignment.topLeft,
       margin: EdgeInsets.only(top: 0, bottom: 0),
-      padding: EdgeInsets.only(top: 10, bottom: 0),
+      padding: EdgeInsets.only(top: 14, bottom: 0),
       height: 50,
       child: Row(
         children: <Widget>[
@@ -209,7 +244,7 @@ class SwiperDiy extends StatelessWidget {
           ),
           Offstage(
             offstage: false,
-            child: ProductHeaderChild(showSliverPersistentHeader: true),
+            child: ProductHeaderChild(showSliverPersistentHeader: false),
           )
         ],
       ),
@@ -703,71 +738,119 @@ class ProductRecommend extends StatelessWidget {
   }
 }
 
-
 class DetailsBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return Container(
-      width:ScreenUtil().setWidth(750),
+      width: ScreenUtil().setWidth(750),
       color: Colors.white,
-      height: ScreenUtil().setHeight(80),
+      height: ScreenUtil().setHeight(100),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Stack(
+          InkWell(
+            onTap: () {
+              Application.router.navigateTo(context, Routers.root);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              child: Column(
+                children: <Widget>[
+                  Image.asset('assets/images/ic_tab_home_normal.png',
+                      width: 30.0, height: 30.0),
+                  Text(
+                    "首页",
+                    style: TextStyle(color: Colors.black,fontSize: 12),
+                  )
+                ],
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {},
+            child: Container(
+              alignment: Alignment.center,
+              child: Column(
+                children: <Widget>[
+                  Image.asset('assets/images/ic_tab_home_normal.png',
+                      width: 30.0, height: 30.0),
+                  Text(
+                    "收藏",
+                    style: TextStyle(color: Colors.black,fontSize: 12),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                },
+                onTap: () async {},
                 child: Container(
-                  width: ScreenUtil().setWidth(110) ,
                   alignment: Alignment.center,
-                  child:Icon(
-                    Icons.shopping_cart,
-                    size: 35,
-                    color: Colors.red,
+                  width: ScreenUtil().setWidth(220),
+                  height: ScreenUtil().setHeight(70),
+                  padding: EdgeInsets.only(left: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
+    bottomLeft: Radius.circular(20))
                   ),
-                ) ,
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset('assets/images/ic_tab_home_normal.png',
+                          width: 30.0, height: 30.0),
+                      Text(
+                        '  分享',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: ScreenUtil().setSp(28)),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {},
+                child: Container(
+                  alignment: Alignment.center,
+                  width: ScreenUtil().setWidth(250),
+                  height: ScreenUtil().setHeight(70),
+
+                  padding: EdgeInsets.only(left: 20),
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.only(topRight: Radius.circular(20),
+                          bottomRight: Radius.circular(20))
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Image.asset('assets/images/ic_tab_home_normal.png',
+                          width: 30.0, height: 30.0),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '  领券',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: ScreenUtil().setSp(28)),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
             ],
-          ),
-
-          InkWell(
-            onTap: ()async {
-
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: ScreenUtil().setWidth(320),
-              height: ScreenUtil().setHeight(80),
-              color: Colors.green,
-              child: Text(
-                '加入购物车',
-                style: TextStyle(color: Colors.white,fontSize: ScreenUtil().setSp(28)),
-              ),
-            ) ,
-          ),
-          InkWell(
-            onTap: ()async{
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: ScreenUtil().setWidth(320),
-              height: ScreenUtil().setHeight(80),
-              color: Colors.red,
-              child: Text(
-                '马上购买',
-                style: TextStyle(color: Colors.white,fontSize: ScreenUtil().setSp(28)),
-              ),
-            ) ,
-          ),
+          )
         ],
       ),
     );
   }
 }
-
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate({

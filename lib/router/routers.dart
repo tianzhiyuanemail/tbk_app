@@ -16,7 +16,8 @@ class Routers {
       }
     );
     /// 配置路由
-    router.define(detailsPage, handler: detailsHandler);
+      router.define(detailsPage, handler: detailsHandler);
+      router.define(root, handler: rootHandler);
 
   }
 
