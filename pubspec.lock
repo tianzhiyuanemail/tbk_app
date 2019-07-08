@@ -132,6 +132,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.6"
+  nautilus:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "336adebe48cffaaee291c982aa692cc9f438489b"
+      url: "https://github.com/tianzhiyuanemail/nautilus.git"
+    source: git
+    version: "0.0.7"
   path:
     dependency: transitive
     description:

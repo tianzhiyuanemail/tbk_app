@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tbk_app/router/application.dart';
 import 'package:tbk_app/router/routers.dart';
+import 'package:nautilus/nautilus.dart' as nautilus;
+import 'package:nautilus/nautilus.dart' ;
 
 /// Sliver 商品列表  SliverGrid
 class SliverProductListSliverGrid extends StatelessWidget {
@@ -19,7 +21,10 @@ class SliverProductListSliverGrid extends StatelessWidget {
   List<Widget> _getListVidget(){
     return list.map((obj){
       return  InkWell(
-        onTap: () {},
+        onTap: () {
+
+
+        },
         child: Container(
           color: Colors.white,
           padding: EdgeInsets.all(5),

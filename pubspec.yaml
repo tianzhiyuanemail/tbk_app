@@ -35,7 +35,10 @@ dependencies:
   #  状态
   provide: ^1.0.2
   #  阿里百川电商Flutter插件
-#  nautilus: ^0.0.6
+  nautilus:
+    git:
+      url: https://github.com/tianzhiyuanemail/nautilus.git
+
 
   #  富文本
   flutter_html_widget:

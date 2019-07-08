@@ -8,7 +8,7 @@ import 'package:tbk_app/provide/child_cate.dart';
 import 'package:fluro/fluro.dart';
 import 'package:tbk_app/router/routers.dart';
 import 'package:tbk_app/router/application.dart';
-
+import 'package:nautilus/nautilus.dart' as nautilus;
 
 void main() {
   var childCate  = ChildCate();
@@ -30,6 +30,10 @@ void main() {
     SystemChrome.setSystemUIOverlayStyle(style);
   }
 
+
+  nautilus.initTradeAsync(debuggable: false).then((data){
+    print("初始化淘宝客结果：${data.isSuccessful}");
+  });
   runApp(ProviderNode(child: MyApp(),providers: providers,));
 
 

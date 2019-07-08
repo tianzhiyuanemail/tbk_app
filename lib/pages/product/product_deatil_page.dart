@@ -19,7 +19,8 @@ import 'package:tbk_app/router/routers.dart';
 import 'package:tbk_app/util/easy_refresh_util.dart';
 import 'package:tbk_app/widgets/back_top_widget.dart';
 import 'package:tbk_app/widgets/product_list_view_widget.dart';
-
+import 'package:nautilus/nautilus.dart' as nautilus;
+import 'package:nautilus/nautilus.dart' ;
 // ignore: must_be_immutable
 class ProductDetail extends StatefulWidget {
   String productId;
@@ -120,7 +121,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 Positioned(
                   bottom: 0,
                   left: 0,
-                  child: DetailsBottom(),
+                  child: DetailsBottom(productModel: productModel),
                 )
               ],
             ),
@@ -739,6 +740,11 @@ class ProductRecommend extends StatelessWidget {
 }
 
 class DetailsBottom extends StatelessWidget {
+
+  ProductModel productModel;
+
+  DetailsBottom({this.productModel});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -786,7 +792,22 @@ class DetailsBottom extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               InkWell(
-                onTap: () async {},
+                onTap: () async {
+
+                  Map<String, String> taoKeParamsextraParams = new Map();
+                  taoKeParamsextraParams['taokeAppkey'] = '24900413';
+
+                  Map<String, String> extraParams = new Map();
+                  extraParams['isv_code'] = 'appisvcode';
+
+                  nautilus.openUrl(
+                      pageUrl: productModel.couponShareUrl,
+                      openType:nautilus.OpenType.NATIVE,
+                      schemeType:"taobao_oscheme",
+                      extParams:extraParams
+                  );
+
+                },
                 child: Container(
                   alignment: Alignment.center,
                   width: ScreenUtil().setWidth(220),
@@ -812,7 +833,28 @@ class DetailsBottom extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: () async {},
+                onTap: () async {
+
+                  Map<String, String> taoKeParamsextraParams = new Map();
+                  taoKeParamsextraParams['taokeAppkey'] = '24900413';
+
+                  Map<String, String> extraParams = new Map();
+                  extraParams['isv_code'] = 'appisvcode';
+
+                  nautilus.openItemDetail(
+                      itemID: productModel.numIid,
+                      taoKeParams: nautilus.TaoKeParams(
+                          unionId: "",
+                          subPid: "mm_114747138_45538443_624654015",
+                          pid: "mm_114747138_45538443_624654015",
+                          adzoneId: "624654015",
+                          extParams:taoKeParamsextraParams
+                      ),
+                      openType:nautilus.OpenType.NATIVE,
+                      schemeType:"taobao_oscheme",
+                      extParams:extraParams
+                  );
+                },
                 child: Container(
                   alignment: Alignment.center,
                   width: ScreenUtil().setWidth(250),
